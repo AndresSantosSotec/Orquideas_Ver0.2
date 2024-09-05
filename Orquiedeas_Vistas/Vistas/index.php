@@ -1,3 +1,9 @@
+<?php
+// index.php
+header('Location: dashboard.php');
+exit;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

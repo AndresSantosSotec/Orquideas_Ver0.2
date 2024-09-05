@@ -1,0 +1,54 @@
+.dashboard-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.sidebar {
+    background-color: #37354a;
+    color: white;
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    transition: width 0.3s;
+    overflow-x: hidden; /* Oculta el desbordamiento horizontal (texto) */
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.main-content.expanded {
+    margin-left: 60px;
+}
+
+.list-group-item {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    white-space: nowrap; /* Evita que el texto se divida */
+    margin-left: 10px; /* Agrega margen izquierdo al texto */
+}
+
+
+
+.list-group-item.collapsed {
+    overflow: hidden; /* Oculta el texto colapsado */
+}
+
+.toggle-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
