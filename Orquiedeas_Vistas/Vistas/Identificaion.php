@@ -15,12 +15,14 @@
 
     <!-- Estilos personalizados -->
     <style>
-        .camera-container, .upload-container {
+        .camera-container,
+        .upload-container {
             text-align: center;
             margin-top: 20px;
         }
 
-        .camera-container video, .upload-container img {
+        .camera-container video,
+        .upload-container img {
             width: 100%;
             max-width: 500px;
             border: 2px solid #007bff;
@@ -28,15 +30,18 @@
             margin-bottom: 15px;
         }
 
-        .camera-buttons, .upload-buttons {
+        .camera-buttons,
+        .upload-buttons {
             margin-top: 20px;
         }
 
-        .camera-buttons button, .upload-buttons button {
+        .camera-buttons button,
+        .upload-buttons button {
             margin: 0 10px;
         }
 
-        .camera-info, .upload-info {
+        .camera-info,
+        .upload-info {
             margin-top: 20px;
         }
 
@@ -136,7 +141,7 @@
 
         <!-- Contenedor para cargar imagen -->
         <div class="upload-container" id="uploadSection" style="display: none;">
-            <input type="file" id="uploadInput" accept="image/*" class="form-control mb-3">
+            <input type="file" id="uploadInput" accept="image/png, image/jpeg, image/jpg, image/gif" class="form-control mb-3">
             <img id="uploadedImage" src="#" alt="Imagen seleccionada" style="display: none;">
             <div class="upload-buttons">
                 <button class="btn btn-warning" id="recognizeButtonImage" style="display:none;"><i class="fas fa-search"></i> Reconocer Orquídea</button>
@@ -151,6 +156,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
     <script>
+        const apiKey = '3LMdzTlFYlGQ79ZcE9drpQ9Ad4Ne2ZZptbFMnPsqYOcSY8WId'; // Reemplaza con tu API Key real
+        const apiUrl = 'https://plant.id/api/v3';
+
+
+        async function recognizeOrchid(base64Image) {
+            const requestData = {
+                api_key: apiKey,
+                images: [base64Image],
+                modifiers: ["crops_fast", "similar_images"],
+                plant_details: ["common_names", "url", "name_authority", "wiki_description", "taxonomy"]
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        }
+
         // Variables para la cámara y el stream
         let cameraStream = document.getElementById('cameraStream');
         let stream;
@@ -166,10 +199,12 @@
         let uploadSection = document.getElementById('uploadSection');
 
         // Función para abrir la cámara
-        openCameraButton.addEventListener('click', function () {
+        openCameraButton.addEventListener('click', function() {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (mediaStream) {
+                navigator.mediaDevices.getUserMedia({
+                        video: true
+                    })
+                    .then(function(mediaStream) {
                         stream = mediaStream;
                         cameraStream.srcObject = stream;
                         cameraStatus.innerHTML = "<p class='text-success'>Cámara activada.</p>";
@@ -177,7 +212,7 @@
                         recognizeButtonCamera.disabled = false;
                         openCameraButton.disabled = true;
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         cameraStatus.innerHTML = "<p class='text-danger'>No se pudo acceder a la cámara: " + error.message + "</p>";
                     });
             } else {
@@ -186,8 +221,8 @@
         });
 
         // Función para cerrar la cámara
-        closeCameraButton.addEventListener('click', function () {
-            stream.getTracks().forEach(function (track) {
+        closeCameraButton.addEventListener('click', function() {
+            stream.getTracks().forEach(function(track) {
                 track.stop();
             });
             cameraStream.srcObject = null;
@@ -198,43 +233,45 @@
         });
 
         // Botones de selección de cámara o cargar imagen
-        document.getElementById('useCameraButton').addEventListener('click', function () {
+        document.getElementById('useCameraButton').addEventListener('click', function() {
             cameraSection.style.display = 'block';
             uploadSection.style.display = 'none';
         });
 
-        document.getElementById('uploadImageButton').addEventListener('click', function () {
+        document.getElementById('uploadImageButton').addEventListener('click', function() {
             cameraSection.style.display = 'none';
             uploadSection.style.display = 'block';
         });
 
         // Funcionalidad para cargar una imagen
-        document.getElementById('uploadInput').addEventListener('change', function (event) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let uploadedImage = document.getElementById('uploadedImage');
-                uploadedImage.src = e.target.result;
-                uploadedImage.style.display = 'block';
-                document.getElementById('uploadStatus').innerHTML = "<p class='text-success'>Imagen cargada correctamente.</p>";
-                document.getElementById('recognizeButtonImage').style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
+        document.getElementById('uploadInput').addEventListener('change', function(event) {
+            let file = event.target.files[0];
+            let validTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
 
-        // Simulación de reconocimiento de orquídea para la cámara
-        recognizeButtonCamera.addEventListener('click', function () {
-            cameraStatus.innerHTML = "<p class='text-info'>Reconociendo orquídea... (Simulación)</p>";
-            setTimeout(function () {
-                cameraStatus.innerHTML = "<p class='text-success'>Orquídea reconocida correctamente.</p>";
-            }, 2000);
-        });
+            if (validTypes.includes(file.type)) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let uploadedImage = document.getElementById('uploadedImage');
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block';
 
-        // Simulación de reconocimiento de orquídea para la imagen cargada
-        document.getElementById('recognizeButtonImage').addEventListener('click', function () {
-            document.getElementById('uploadStatus').innerHTML = "<p class='text-info'>Reconociendo orquídea... (Simulación)</p>";
-            setTimeout(function () {
-                document.getElementById('uploadStatus').innerHTML = "<p class='text-success'>Orquídea reconocida correctamente.</p>";
-            }, 2000);
+                    // Llama a la API para reconocer la imagen
+                    recognizeOrchid(e.target.result.split(',')[1])
+                        .then(data => {
+                            // Muestra los resultados de la API (aquí puedes personalizar cómo lo muestras)
+                            document.getElementById('uploadStatus').innerHTML = `<p class='text-success'>Orquídea reconocida: ${data.suggestions[0].plant_name}</p>`;
+                        })
+                        .catch(err => {
+                            document.getElementById('uploadStatus').innerHTML = `<p class='text-danger'>Error al reconocer la orquídea: ${err.message}</p>`;
+                        });
+
+                    document.getElementById('recognizeButtonImage').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('uploadStatus').innerHTML = "<p class='text-danger'>Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF).</p>";
+                event.target.value = ''; // Resetea el campo de carga de archivos
+            }
         });
     </script>
 </body>
