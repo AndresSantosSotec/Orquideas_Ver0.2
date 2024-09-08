@@ -14,90 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Estilos personalizados -->
-    <style>
-        .camera-container,
-        .upload-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .camera-container video,
-        .upload-container img {
-            width: 100%;
-            max-width: 500px;
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .camera-buttons,
-        .upload-buttons {
-            margin-top: 20px;
-        }
-
-        .camera-buttons button,
-        .upload-buttons button {
-            margin: 0 10px;
-        }
-
-        .camera-info,
-        .upload-info {
-            margin-top: 20px;
-        }
-
-        .sub-modules {
-            margin-top: 40px;
-        }
-
-        .sub-modules .card {
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .sub-modules .card:hover {
-            transform: scale(1.05);
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100vh;
-            background-color: #343a40;
-            color: white;
-            padding: 20px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 15px 0;
-        }
-
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar ul li a i {
-            margin-right: 10px;
-        }
-
-        .sidebar h2 {
-            margin-bottom: 30px;
-        }
-
-        .main-content {
-            margin-left: 270px;
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../Recursos/css/recon.css">
 </head>
 
 <body>
@@ -156,13 +73,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
     <script>
-        const apiKey = '3LMdzTlFYlGQ79ZcE9drpQ9Ad4Ne2ZZptbFMnPsqYOcSY8WId'; // Reemplaza con tu API Key real
-        const apiUrl = 'https://plant.id/api/v3';
-
+        const apiKey = 'OEIpwUZDZVaQLKPumB5zd0D1rnfkA05bIDIWokqwQfOwcT3dHa';  // Reemplaza con tu API Key de Plant.id
+        const apiUrl = 'https://plant.id/api/v3';  // URL correcta de la API
 
         async function recognizeOrchid(base64Image) {
             const requestData = {
-                api_key: apiKey,
                 images: [base64Image],
                 modifiers: ["crops_fast", "similar_images"],
                 plant_details: ["common_names", "url", "name_authority", "wiki_description", "taxonomy"]
@@ -171,13 +86,14 @@
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Api-Key': apiKey // Asegúrate de enviar la API Key en el header
                 },
                 body: JSON.stringify(requestData)
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Error HTTP! status: ${response.status}`);
             }
 
             const result = await response.json();
@@ -199,12 +115,10 @@
         let uploadSection = document.getElementById('uploadSection');
 
         // Función para abrir la cámara
-        openCameraButton.addEventListener('click', function() {
+        openCameraButton.addEventListener('click', function () {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({
-                        video: true
-                    })
-                    .then(function(mediaStream) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (mediaStream) {
                         stream = mediaStream;
                         cameraStream.srcObject = stream;
                         cameraStatus.innerHTML = "<p class='text-success'>Cámara activada.</p>";
@@ -212,7 +126,7 @@
                         recognizeButtonCamera.disabled = false;
                         openCameraButton.disabled = true;
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         cameraStatus.innerHTML = "<p class='text-danger'>No se pudo acceder a la cámara: " + error.message + "</p>";
                     });
             } else {
@@ -221,8 +135,8 @@
         });
 
         // Función para cerrar la cámara
-        closeCameraButton.addEventListener('click', function() {
-            stream.getTracks().forEach(function(track) {
+        closeCameraButton.addEventListener('click', function () {
+            stream.getTracks().forEach(function (track) {
                 track.stop();
             });
             cameraStream.srcObject = null;
@@ -233,24 +147,24 @@
         });
 
         // Botones de selección de cámara o cargar imagen
-        document.getElementById('useCameraButton').addEventListener('click', function() {
+        document.getElementById('useCameraButton').addEventListener('click', function () {
             cameraSection.style.display = 'block';
             uploadSection.style.display = 'none';
         });
 
-        document.getElementById('uploadImageButton').addEventListener('click', function() {
+        document.getElementById('uploadImageButton').addEventListener('click', function () {
             cameraSection.style.display = 'none';
             uploadSection.style.display = 'block';
         });
 
         // Funcionalidad para cargar una imagen
-        document.getElementById('uploadInput').addEventListener('change', function(event) {
+        document.getElementById('uploadInput').addEventListener('change', function (event) {
             let file = event.target.files[0];
             let validTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
 
             if (validTypes.includes(file.type)) {
                 let reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     let uploadedImage = document.getElementById('uploadedImage');
                     uploadedImage.src = e.target.result;
                     uploadedImage.style.display = 'block';
@@ -258,7 +172,7 @@
                     // Llama a la API para reconocer la imagen
                     recognizeOrchid(e.target.result.split(',')[1])
                         .then(data => {
-                            // Muestra los resultados de la API (aquí puedes personalizar cómo lo muestras)
+                            // Muestra los resultados de la API
                             document.getElementById('uploadStatus').innerHTML = `<p class='text-success'>Orquídea reconocida: ${data.suggestions[0].plant_name}</p>`;
                         })
                         .catch(err => {
@@ -270,7 +184,7 @@
                 reader.readAsDataURL(file);
             } else {
                 document.getElementById('uploadStatus').innerHTML = "<p class='text-danger'>Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF).</p>";
-                event.target.value = ''; // Resetea el campo de carga de archivos
+                event.target.value = '';  // Resetea el campo de carga de archivos
             }
         });
     </script>

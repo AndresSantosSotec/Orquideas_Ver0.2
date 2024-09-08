@@ -100,7 +100,7 @@
                         <i class="fas fa-plus-circle card-icon orquidea"></i>
                         <h5 class="card-title">Registro de Orquídeas</h5>
                         <p class="card-text">Gestiona el registro de nuevas orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
+                        <a href="Neva_orquidea.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                         <i class="fas fa-user card-icon perfiles"></i>
                         <h5 class="card-title">Perfiles de Usuario</h5>
                         <p class="card-text">Gestiona los perfiles de los usuarios.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
+                        <a href="" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
