@@ -77,8 +77,8 @@
         <ul>
             <li><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
             <li><a href="#"><i class="fas fa-plus-circle"></i> <span>Registro de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
-            <li><a href="Identificaion.php"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
+            <li><a href="Registro_usuario.php"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
+            <li><a href="Identificar.php"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
             <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
             <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
             <li><a href="#"><i class="fas fa-search"></i> <span>Revisión de Estado de Orquídeas</span></a></li>
@@ -112,7 +112,7 @@
                         <i class="fas fa-user card-icon perfiles"></i>
                         <h5 class="card-title">Perfiles de Usuario</h5>
                         <p class="card-text">Gestiona los perfiles de los usuarios.</p>
-                        <a href="" class="btn btn-primary">Ver más</a>
+                        <a href="Registro_usuario.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                         <i class="fas fa-leaf card-icon identificacion"></i>
                         <h5 class="card-title">Identificación de Orquídeas</h5>
                         <p class="card-text">Sistema para identificar orquídeas.</p>
-                        <a href="Identificaion.php" class="btn btn-primary">Ver más</a>
+                        <a href="Identificar.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>

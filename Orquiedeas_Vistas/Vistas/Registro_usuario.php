@@ -1,72 +1,22 @@
+<?php
+include '../Backend/Conexion_bd.php';
+// Consultar los departamentos desde la base de datos
+$consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento` FROM `tb_departamento`");
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
+    <title>Agregar Participante</title>
 
     <!-- Enlaces a Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css">
-
-    <!-- Enlace a FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
-
-    <!-- Estilos CSS personalizados -->
-    <style>
-        .card-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .card-icon.orquidea {
-            color: #28a745;
-        }
-
-        .card-icon.perfiles {
-            color: #17a2b8;
-        }
-
-        .card-icon.identificacion {
-            color: #ffc107;
-        }
-
-        .card-icon.juzgamiento {
-            color: #6c757d;
-        }
-
-        .card-icon.reporte {
-            color: #007bff;
-        }
-
-        .card-icon.revision {
-            color: #dc3545;
-        }
-
-        .card {
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .sidebar.collapsed {
-            width: 60px;
-        }
-
-        .main-content.collapsed {
-            margin-left: 60px;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            transition: margin-left 0.3s;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
 </head>
 
 <body>
@@ -75,113 +25,163 @@
         <button class="toggle-button" id="toggle-button">☰</button>
         <h2>Admin Panel</h2>
         <ul>
-            <li><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-            <li><a href="#"><i class="fas fa-plus-circle"></i> <span>Registro de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
-            <li><a href="Identificaion.php"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-search"></i> <span>Revisión de Estado de Orquídeas</span></a></li>
+            <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="#"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
+            <li><a href="#"><i class="fas fa-users"></i> <span>Ver Usuarios</span></a></li>
+            <li><a href="Identificar.php"><i class="fas fa-file-alt"></i> <span>Reporte de Usuarios</span></a></li>
             <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
         </ul>
     </div>
 
     <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-        <h1>Bienvenido al Dashboard</h1>
-        <p>Este es un ejemplo básico de un dashboard con sidebar utilizando Bootstrap.</p>
-
-        <!-- Tarjetas que representan los módulos -->
-        <div class="row">
-            <!-- Registro de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-plus-circle card-icon orquidea"></i>
-                        <h5 class="card-title">Registro de Orquídeas</h5>
-                        <p class="card-text">Gestiona el registro de nuevas orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
+        <div class="container mt-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-user-plus"></i> Agregar Participante</h3>
                 </div>
-            </div>
+                <div class="card-body">
+                    <form id="form-participante">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="numero_telefonico" class="form-label">Número Telefónico</label>
+                            <input type="tel" class="form-control" id="numero_telefonico" name="numero_telefonico" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_participante" class="form-label">Tipo de Participante</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipo_participante" id="nacional" value="1" required>
+                                <label class="form-check-label" for="nacional">Nacional</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipo_participante" id="extranjero" value="2" required>
+                                <label class="form-check-label" for="extranjero">Extranjero</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Campos que se mostrarán si es Nacional -->
+                        <div id="campos_nacional">
+                            <div class="mb-3">
+                                <label for="departamento" class="form-label">Departamento</label>
+                                <select class="form-select" id="departamento" name="id_departamento">
+                                    <option value="">Selecciona un Departamento</option>
+                                    <?php
+                                    // Cargar los departamentos de la base de datos
+                                    while ($row = mysqli_fetch_assoc($consu)) {
+                                        echo '<option value="' . $row['id_departamento'] . '">' . $row['nombre_departamento'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="municipio" class="form-label">Municipio</label>
+                                <select class="form-select" id="municipio" name="id_municipio">
+                                    <option value="">Selecciona un Municipio</option>
+                                </select>
+                            </div>
+                        </div>
 
-            <!-- Perfiles de Usuario -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-user card-icon perfiles"></i>
-                        <h5 class="card-title">Perfiles de Usuario</h5>
-                        <p class="card-text">Gestiona los perfiles de los usuarios.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
+                        <!-- Campo que se mostrará si es Extranjero -->
+                        <div id="campo_extranjero" style="display: none;">
+                            <div class="mb-3">
+                                <label for="pais" class="form-label">País</label>
+                                <input type="text" class="form-control" id="pais" name="pais">
+                            </div>
+                        </div>
 
-            <!-- Identificación de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-leaf card-icon identificacion"></i>
-                        <h5 class="card-title">Identificación de Orquídeas</h5>
-                        <p class="card-text">Sistema para identificar orquídeas.</p>
-                        <a href="Identificaion.php" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Juzgamiento -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-gavel card-icon juzgamiento"></i>
-                        <h5 class="card-title">Juzgamiento</h5>
-                        <p class="card-text">Sistema de juzgamiento de orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reporte de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-chart-bar card-icon reporte"></i>
-                        <h5 class="card-title">Reporte de Orquídeas</h5>
-                        <p class="card-text">Genera reportes sobre las orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revisión de Estado de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-search card-icon revision"></i>
-                        <h5 class="card-title"> Estado de Orquídeas</h5>
-                        <p class="card-text">Revisa el estado actual de las orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
+                        <button type="submit" class="btn btn-success">Agregar Participante</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
+    <!-- Scripts para el sidebar y los selects dependientes -->
     <script>
-        // Función para enviar mensajes de WhatsApp al grupo
-        function enviarMensajeWhatsApp() {
-            let mensaje = "Mensaje de prueba enviado desde el Dashboard.";
-            let urlWhatsapp = "https://wa.me/?text=" + encodeURIComponent(mensaje);
-            window.open(urlWhatsapp, '_blank');
-        }
+        // Detectar cambio en el select de departamento
+        $('#departamento').on('change', function() {
+            var id_departamento = $(this).val();
+
+            // Si se selecciona un departamento, cargar municipios por AJAX
+            if (id_departamento) {
+                $.ajax({
+                    type: 'POST',
+                    url: '../Backend/get_municipios.php', // Cambia la ruta según sea necesario
+                    data: { id_departamento: id_departamento },
+                    success: function(response) {
+                        // Asegurarse de que el backend esté devolviendo un <option> válido para el select de municipios
+                        $('#municipio').html(response); // Actualiza el select de municipios con los resultados
+                    },
+                    error: function() {
+                        alert("Error al cargar los municipios");
+                    }
+                });
+            } else {
+                $('#municipio').html('<option value="">Selecciona un Municipio</option>');
+            }
+        });
+
+        // Mostrar/Ocultar campos según si es Nacional o Extranjero
+        $('input[name="tipo_participante"]').on('change', function() {
+            if ($(this).val() == '1') {
+                $('#campos_nacional').show();
+                $('#campo_extranjero').hide();
+                $('#pais').val('Guatemala'); // Fijar el país a Guatemala cuando es Nacional
+            } else if ($(this).val() == '2') {
+                $('#campos_nacional').hide();
+                $('#campo_extranjero').show();
+                $('#pais').val(''); // Limpiar el campo de país cuando es Extranjero
+            }
+        });
+
+        // Enviar el formulario usando AJAX
+        $('#form-participante').on('submit', function(e) {
+            e.preventDefault(); // Prevenir el envío tradicional del formulario
+
+            $.ajax({
+                url: '../Backend/Consultas.php',
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Participante agregado',
+                            text: response.message,
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            window.location.href = 'Registro_usuario.php'; // Redirigir a la página de registro
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo procesar la solicitud',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
 
         // Funcionalidad de colapsar y expandir el sidebar
-        document.getElementById('toggle-button').addEventListener('click', function () {
+        document.getElementById('toggle-button').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
             var mainContent = document.getElementById('main-content');
             sidebar.classList.toggle('collapsed');
@@ -189,5 +189,4 @@
         });
     </script>
 </body>
-
 </html>
