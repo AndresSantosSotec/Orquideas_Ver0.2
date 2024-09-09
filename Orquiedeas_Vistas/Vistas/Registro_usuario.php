@@ -180,7 +180,7 @@ $consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento
             });
         });
 
-        // Funcionalidad de colapsar y expandir el sidebar
+        // Funcionalidad de colapsar y expandir el sidebarweewr
         document.getElementById('toggle-button').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
             var mainContent = document.getElementById('main-content');
