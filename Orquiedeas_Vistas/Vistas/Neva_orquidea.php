@@ -65,9 +65,11 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                                 <option value="Laboratorio">Laboratorio</option>
                             </select>
                         </div>
+                        
+                        <!-- Campo para cargar imagen -->
                         <div class="mb-3">
                             <label for="foto" class="form-label">Foto de la Orquídea</label>
-                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
                         </div>
 
                         <!-- Botón para abrir la cámara y tomar una foto -->
@@ -110,16 +112,18 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
             const apagarCamara = document.getElementById('apagar-camara');
 
             // Pedir permisos para acceder a la cámara
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.style.display = 'block';
-                capturar.style.display = 'block';
-                apagarCamara.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error al acceder a la cámara: ', error);
-            });
+            navigator.mediaDevices.getUserMedia({
+                    video: true
+                })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    capturar.style.display = 'block';
+                    apagarCamara.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error al acceder a la cámara: ', error);
+                });
 
             capturar.addEventListener('click', function() {
                 const context = canvas.getContext('2d');
@@ -133,7 +137,9 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                 // Convertir la imagen en un blob y simular la subida de un archivo
                 canvas.toBlob(function(blob) {
                     const fileInput = document.getElementById('foto');
-                    const file = new File([blob], 'foto_orquidea.png', { type: 'image/png' });
+                    const file = new File([blob], 'foto_orquidea.png', {
+                        type: 'image/png'
+                    });
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     fileInput.files = dataTransfer.files;
@@ -152,19 +158,20 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
             });
         });
 
-        $('#form-orquidea').on('submit', function (e) {
+        // Manejador del formulario
+        $('#form-orquidea').on('submit', function(e) {
             e.preventDefault(); // Prevenir el envío tradicional del formulario
 
             var formData = new FormData(this);
 
             $.ajax({
-                url: '../Backend/agregar_orquidea.php',
+                url: '../Backend/agregar_orquidea.php', // Cambia esta URL si es necesario
                 type: 'POST',
                 data: formData,
                 processData: false, // No procesar los datos
                 contentType: false, // No establecer un content-type específico
-                dataType: 'json',
-                success: function (response) {
+                dataType: 'json', // Esperamos una respuesta JSON
+                success: function(response) {
                     if (response.status === 'success') {
                         Swal.fire({
                             icon: 'success',
@@ -172,13 +179,7 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                             text: response.message,
                             confirmButtonText: 'Aceptar'
                         }).then(() => {
-                            // Descargar el QR automáticamente
-                            let link = document.createElement('a');
-                            link.href = response.qr_url;  // Enlace del QR generado
-                            link.download = 'qr_code.png'; // Nombre del archivo a descargar
-                            link.click();
-                            
-                            window.location.href = 'Registro_orquidea.php'; // Redirigir a la página de registro
+                            window.location.href = 'Neva_orquidea.php'; // Redirigir
                         });
                     } else {
                         Swal.fire({
@@ -189,25 +190,30 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                         });
                     }
                 },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo procesar la solicitud',
-                        confirmButtonText: 'Aceptar'
-                    });
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error en la solicitud: ', jqXHR.status, errorThrown);
+                    console.log(jqXHR.responseText);
+                    try {
+                        let parsedResponse = JSON.parse(jqXHR.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: parsedResponse.message,
+                            confirmButtonText: 'Aceptar'
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo procesar la solicitud. Revisa la consola para más detalles.',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }
                 }
             });
         });
-
-        // Funcionalidad de colapsar y expandir el sidebar
-        document.getElementById('toggle-button').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
-        });
     </script>
+
 </body>
 
 </html>

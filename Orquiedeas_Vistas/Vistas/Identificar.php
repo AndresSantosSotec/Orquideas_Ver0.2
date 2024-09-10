@@ -1,211 +1,191 @@
-<?php
-include '../Backend/Conexion_bd.php';
-
-// Consultar los participantes desde la base de datos
-$participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_participante`");
-?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Orquídea</title>
+    <title>Reconocimiento de Orquídeas</title>
 
     <!-- Enlaces a Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css">
+
+    <!-- Enlace a FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../Recursos/css/recon.css">
 </head>
 
 <body>
+
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <button class="toggle-button" id="toggle-button">☰</button>
+    <div class="sidebar">
         <h2>Admin Panel</h2>
         <ul>
-            <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="#"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-users"></i> <span>Ver Orquídeas</span></a></li>
+            <li><a href="index.php"><i class="fas fa-home"></i> <span>Volver al Inicio</span></a></li>
+            <li><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+            <li><a href="#"><i class="fas fa-plus-circle"></i> <span>Registro de Orquídeas</span></a></li>
+            <li><a href="#"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
+            <li><a href="#"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
+            <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
             <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
         </ul>
     </div>
 
     <!-- Contenido principal -->
-    <div class="main-content" id="main-content">
-        <div class="container mt-5">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3><i class="fas fa-leaf"></i> Registrar Orquídea</h3>
-                </div>
-                <div class="card-body">
-                    <form id="form-orquidea" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="nombre_planta" class="form-label">Nombre de la Planta</label>
-                            <input type="text" class="form-control" id="nombre_planta" name="nombre_planta" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="especie" class="form-label">Especie</label>
-                            <select class="form-select" id="especie" name="especie" required>
-                                <option value="">Selecciona una Especie</option>
-                                <option value="Especie A">Especie A</option>
-                                <option value="Especie B">Especie B</option>
-                                <option value="Especie C">Especie C</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="origen" class="form-label">Origen</label>
-                            <select class="form-select" id="origen" name="origen" required>
-                                <option value="">Selecciona el Origen</option>
-                                <option value="Natural">Natural</option>
-                                <option value="Híbrida">Híbrida</option>
-                                <option value="Laboratorio">Laboratorio</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="foto" class="form-label">Foto de la Orquídea</label>
-                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-                        </div>
+    <div class="main-content">
+        <h1 class="text-center mt-5">Reconocimiento de Orquídeas</h1>
+        <p class="text-center">Elige entre usar la cámara o cargar una imagen para identificar las orquídeas.</p>
 
-                        <!-- Botón para abrir la cámara y tomar una foto -->
-                        <div class="mb-3">
-                            <label for="camara" class="form-label">Tomar Foto con la Cámara</label>
-                            <button type="button" class="btn btn-primary" id="abrir-camara">Abrir Cámara</button>
-                            <button type="button" class="btn btn-secondary" id="apagar-camara" style="display:none;">Apagar Cámara</button>
-                            <video id="video" style="display:none;" width="300" height="200" autoplay></video>
-                            <canvas id="canvas" style="display:none;"></canvas>
-                            <button type="button" id="capturar" class="btn btn-success" style="display:none;">Capturar</button>
-                        </div>
+        <!-- Botones para elegir entre usar cámara o subir imagen -->
+        <div class="text-center mb-4">
+            <button class="btn btn-primary" id="useCameraButton"><i class="fas fa-camera"></i> Usar Cámara</button>
+            <button class="btn btn-secondary" id="uploadImageButton"><i class="fas fa-upload"></i> Cargar Imagen</button>
+        </div>
 
-                        <!-- Select para participantes -->
-                        <div class="mb-3">
-                            <label for="id_participante" class="form-label">Participante</label>
-                            <select class="form-select" id="id_participante" name="id_participante" required>
-                                <option value="">Selecciona un Participante</option>
-                                <?php
-                                // Llenar el select con los participantes de la base de datos
-                                while ($row = mysqli_fetch_assoc($participantes)) {
-                                    echo '<option value="' . $row['id'] . '">' . $row['nombre'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-success">Registrar Orquídea</button>
-                    </form>
-                </div>
+        <!-- Contenedor de la cámara -->
+        <div class="camera-container" id="cameraSection" style="display: none;">
+            <video id="cameraStream" autoplay></video>
+            <div class="camera-buttons">
+                <button class="btn btn-success" id="openCameraButton"><i class="fas fa-camera"></i> Abrir Cámara</button>
+                <button class="btn btn-danger" id="closeCameraButton" disabled><i class="fas fa-times-circle"></i> Cerrar Cámara</button>
+                <button class="btn btn-warning" id="recognizeButtonCamera" disabled><i class="fas fa-search"></i> Reconocer Orquídea</button>
             </div>
+            <div class="camera-info" id="cameraStatus"></div>
+        </div>
+
+        <!-- Contenedor para cargar imagen -->
+        <div class="upload-container" id="uploadSection" style="display: none;">
+            <input type="file" id="uploadInput" accept="image/png, image/jpeg, image/jpg, image/gif" class="form-control mb-3">
+            <img id="uploadedImage" src="#" alt="Imagen seleccionada" style="display: none;">
+            <div class="upload-buttons">
+                <button class="btn btn-warning" id="recognizeButtonImage" style="display:none;"><i class="fas fa-search"></i> Reconocer Orquídea</button>
+            </div>
+            <div class="upload-info" id="uploadStatus"></div>
         </div>
     </div>
 
-    <!-- Script para abrir la cámara -->
+    <!-- Enlaces a Bootstrap JS y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
     <script>
-        document.getElementById('abrir-camara').addEventListener('click', function() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const capturar = document.getElementById('capturar');
-            const apagarCamara = document.getElementById('apagar-camara');
+        const apiKey = 'OEIpwUZDZVaQLKPumB5zd0D1rnfkA05bIDIWokqwQfOwcT3dHa';  // Reemplaza con tu API Key de Plant.id
+        const apiUrl = 'https://plant.id/api/v3';  // URL correcta de la API
 
-            // Pedir permisos para acceder a la cámara
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-                video.style.display = 'block';
-                capturar.style.display = 'block';
-                apagarCamara.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error al acceder a la cámara: ', error);
-            });
+        async function recognizeOrchid(base64Image) {
+            const requestData = {
+                images: [base64Image],
+                modifiers: ["crops_fast", "similar_images"],
+                plant_details: ["common_names", "url", "name_authority", "wiki_description", "taxonomy"]
+            };
 
-            capturar.addEventListener('click', function() {
-                const context = canvas.getContext('2d');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-                video.style.display = 'none';
-                capturar.style.display = 'none';
-                apagarCamara.style.display = 'none';
-
-                // Convertir la imagen en un blob y simular la subida de un archivo
-                canvas.toBlob(function(blob) {
-                    const fileInput = document.getElementById('foto');
-                    const file = new File([blob], 'foto_orquidea.png', { type: 'image/png' });
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInput.files = dataTransfer.files;
-                });
-            });
-
-            // Apagar la cámara
-            apagarCamara.addEventListener('click', function() {
-                const stream = video.srcObject;
-                const tracks = stream.getTracks();
-
-                tracks.forEach(track => track.stop());
-                video.style.display = 'none';
-                capturar.style.display = 'none';
-                apagarCamara.style.display = 'none';
-            });
-        });
-
-        $('#form-orquidea').on('submit', function (e) {
-            e.preventDefault(); // Prevenir el envío tradicional del formulario
-
-            var formData = new FormData(this);
-
-            $.ajax({
-                url: '../Backend/registrar_orquidea.php',
-                type: 'POST',
-                data: formData,
-                processData: false, // No procesar los datos
-                contentType: false, // No establecer un content-type específico
-                dataType: 'json',
-                success: function (response) {
-                    if (response.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Orquídea registrada',
-                            text: response.message,
-                            confirmButtonText: 'Aceptar'
-                        }).then(() => {
-                            window.location.href = 'Registro_orquidea.php'; // Redirigir a la página de registro
-                        });
-
-                        // Descargar el QR automáticamente
-                        let link = document.createElement('a');
-                        link.href = response.qr_url;  // Enlace del QR generado
-                        link.download = 'qr_code.png'; // Nombre del archivo a descargar
-                        link.click();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message,
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Api-Key': apiKey // Asegúrate de enviar la API Key en el header
                 },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo procesar la solicitud',
-                        confirmButtonText: 'Aceptar'
-                    });
-                }
+                body: JSON.stringify(requestData)
             });
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        }
+
+        // Variables para la cámara y el stream
+        let cameraStream = document.getElementById('cameraStream');
+        let stream;
+
+        // Botones
+        let openCameraButton = document.getElementById('openCameraButton');
+        let closeCameraButton = document.getElementById('closeCameraButton');
+        let recognizeButtonCamera = document.getElementById('recognizeButtonCamera');
+        let cameraStatus = document.getElementById('cameraStatus');
+
+        // Secciones de cámara e imagen
+        let cameraSection = document.getElementById('cameraSection');
+        let uploadSection = document.getElementById('uploadSection');
+
+        // Función para abrir la cámara
+        openCameraButton.addEventListener('click', function () {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (mediaStream) {
+                        stream = mediaStream;
+                        cameraStream.srcObject = stream;
+                        cameraStatus.innerHTML = "<p class='text-success'>Cámara activada.</p>";
+                        closeCameraButton.disabled = false;
+                        recognizeButtonCamera.disabled = false;
+                        openCameraButton.disabled = true;
+                    })
+                    .catch(function (error) {
+                        cameraStatus.innerHTML = "<p class='text-danger'>No se pudo acceder a la cámara: " + error.message + "</p>";
+                    });
+            } else {
+                cameraStatus.innerHTML = "<p class='text-danger'>Tu dispositivo no soporta el acceso a la cámara.</p>";
+            }
         });
 
-        // Funcionalidad de colapsar y expandir el sidebar
-        document.getElementById('toggle-button').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
+        // Función para cerrar la cámara
+        closeCameraButton.addEventListener('click', function () {
+            stream.getTracks().forEach(function (track) {
+                track.stop();
+            });
+            cameraStream.srcObject = null;
+            cameraStatus.innerHTML = "<p class='text-info'>Cámara desactivada.</p>";
+            openCameraButton.disabled = false;
+            closeCameraButton.disabled = true;
+            recognizeButtonCamera.disabled = true;
+        });
+
+        // Botones de selección de cámara o cargar imagen
+        document.getElementById('useCameraButton').addEventListener('click', function () {
+            cameraSection.style.display = 'block';
+            uploadSection.style.display = 'none';
+        });
+
+        document.getElementById('uploadImageButton').addEventListener('click', function () {
+            cameraSection.style.display = 'none';
+            uploadSection.style.display = 'block';
+        });
+
+        // Funcionalidad para cargar una imagen
+        document.getElementById('uploadInput').addEventListener('change', function (event) {
+            let file = event.target.files[0];
+            let validTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+
+            if (validTypes.includes(file.type)) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let uploadedImage = document.getElementById('uploadedImage');
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.style.display = 'block';
+
+                    // Llama a la API para reconocer la imagen
+                    recognizeOrchid(e.target.result.split(',')[1])
+                        .then(data => {
+                            // Muestra los resultados de la API
+                            document.getElementById('uploadStatus').innerHTML = `<p class='text-success'>Orquídea reconocida: ${data.suggestions[0].plant_name}</p>`;
+                        })
+                        .catch(err => {
+                            document.getElementById('uploadStatus').innerHTML = `<p class='text-danger'>Error al reconocer la orquídea: ${err.message}</p>`;
+                        });
+
+                    document.getElementById('recognizeButtonImage').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('uploadStatus').innerHTML = "<p class='text-danger'>Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF).</p>";
+                event.target.value = '';  // Resetea el campo de carga de archivos
+            }
         });
     </script>
 </body>
