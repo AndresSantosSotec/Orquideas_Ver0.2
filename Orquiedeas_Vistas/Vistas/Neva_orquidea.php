@@ -265,7 +265,11 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
                 }
             });
         });
+
+        //asignacion de tareas pendientes 
     </script>
+
+    
 
 </body>
 
