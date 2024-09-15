@@ -74,7 +74,7 @@
 
     <script>
         const apiKey = 'OEIpwUZDZVaQLKPumB5zd0D1rnfkA05bIDIWokqwQfOwcT3dHa';  // Reemplaza con tu API Key de Plant.id
-        const apiUrl = 'https://plant.id/api/v3';  // URL correcta de la API
+        const apiUrl = 'https://plant.id/api/v3/identification';  // URL correcta de la API
 
         async function recognizeOrchid(base64Image) {
             const requestData = {
