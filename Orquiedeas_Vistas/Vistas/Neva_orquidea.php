@@ -3,6 +3,8 @@ include '../Backend/Conexion_bd.php';
 
 // Consultar los participantes desde la base de datos
 $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_participante`");
+// Consultar los grupos de orquídeas
+$grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo`");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -43,46 +45,59 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                 </div>
                 <div class="card-body">
                     <form id="form-orquidea" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="nombre_planta" class="form-label">Nombre de la Planta</label>
-                            <input type="text" class="form-control" id="nombre_planta" name="nombre_planta" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="especie" class="form-label">Especie</label>
-                            <select class="form-select" id="especie" name="especie" required>
-                                <option value="">Selecciona una Especie</option>
-                                <option value="Especie A">Especie A</option>
-                                <option value="Especie B">Especie B</option>
-                                <option value="Especie C">Especie C</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="origen" class="form-label">Origen</label>
-                            <select class="form-select" id="origen" name="origen" required>
-                                <option value="">Selecciona el Origen</option>
-                                <option value="Natural">Natural</option>
-                                <option value="Híbrida">Híbrida</option>
-                                <option value="Laboratorio">Laboratorio</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Campo para cargar imagen -->
-                        <div class="mb-3">
-                            <label for="foto" class="form-label">Foto de la Orquídea</label>
-                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                        <div class="row">
+                            <!-- Nombre de la Planta -->
+                            <div class="mb-3 col-md-4">
+                                <label for="nombre_planta" class="form-label">Nombre de la Planta</label>
+                                <input type="text" class="form-control" id="nombre_planta" name="nombre_planta" required>
+                            </div>
+
+
+                            <!-- Origen -->
+                            <div class="mb-3 col-md-4">
+                                <label for="origen" class="form-label">Origen</label>
+                                <select class="form-select" id="origen" name="origen" required>
+                                    <option value="">Selecciona el Origen</option>
+                                    <option value="Natural">Natural</option>
+                                    <option value="Laboratorio">Laboratorio</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- Botón para abrir la cámara y tomar una foto -->
-                        <div class="mb-3">
-                            <label for="camara" class="form-label">Tomar Foto con la Cámara</label>
-                            <button type="button" class="btn btn-primary" id="abrir-camara">Abrir Cámara</button>
-                            <button type="button" class="btn btn-secondary" id="apagar-camara" style="display:none;">Apagar Cámara</button>
-                            <video id="video" style="display:none;" width="300" height="200" autoplay></video>
-                            <canvas id="canvas" style="display:none;"></canvas>
-                            <button type="button" id="capturar" class="btn btn-success" style="display:none;">Capturar</button>
+                        <div class="row">
+                            <!-- Grupo -->
+                            <div class="mb-3 col-md-4">
+                                <label for="id_grupo" class="form-label">Grupo</label>
+                                <select class="form-select" id="id_grupo" name="id_grupo" required>
+                                    <option value="">Selecciona un Grupo</option>
+                                    <?php
+                                    // Llenar el select con los grupos de la base de datos
+                                    while ($row = mysqli_fetch_assoc($grupos)) {
+                                        echo '<option value="' . $row['id_grupo'] . '">' . $row['nombre_grupo'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <!-- Clase asociada (select dinámico) -->
+                            <div class="mb-3 col-md-4">
+                                <label for="id_clase" class="form-label">Clase</label>
+                                <select class="form-select" id="id_clase" name="id_clase" required>
+                                    <option value="">Selecciona una Clase</option>
+                                </select>
+                            </div>
+
+                            <!-- Híbrida (booleano) -->
+                            <div class="mb-3 col-md-4">
+                                <label for="hibrida" class="form-label">¿Es Híbrida?</label>
+                                <select class="form-select" id="hibrida" name="hibrida" required>
+                                    <option value="0">No</option>
+                                    <option value="1">Sí</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- Select para participantes -->
+                        <!-- Participante -->
                         <div class="mb-3">
                             <label for="id_participante" class="form-label">Participante</label>
                             <select class="form-select" id="id_participante" name="id_participante" required>
@@ -94,6 +109,22 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                                 }
                                 ?>
                             </select>
+                        </div>
+
+                        <!-- Foto desde archivo -->
+                        <div class="mb-3">
+                            <label for="foto" class="form-label">Foto de la Orquídea</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                        </div>
+
+                        <!-- Cámara -->
+                        <div class="mb-3">
+                            <label for="camara" class="form-label">Tomar Foto con la Cámara</label>
+                            <button type="button" class="btn btn-primary" id="abrir-camara">Abrir Cámara</button>
+                            <button type="button" class="btn btn-secondary" id="apagar-camara" style="display:none;">Apagar Cámara</button>
+                            <video id="video" style="display:none;" width="300" height="200" autoplay></video>
+                            <canvas id="canvas" style="display:none;"></canvas>
+                            <button type="button" id="capturar" class="btn btn-success" style="display:none;">Capturar</button>
                         </div>
 
                         <button type="submit" class="btn btn-success">Registrar Orquídea</button>
@@ -156,6 +187,28 @@ $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_partici
                 capturar.style.display = 'none';
                 apagarCamara.style.display = 'none';
             });
+        });
+
+        // Script para cargar clases según el grupo seleccionado
+        $('#id_grupo').on('change', function() {
+            var id_grupo = $(this).val();
+
+            // Si se selecciona un grupo, cargar las clases por AJAX
+            if (id_grupo) {
+                $.ajax({
+                    type: 'POST',
+                    url: '../Backend/get_clases.php', // Cambia la ruta si es necesario
+                    data: { id_grupo: id_grupo },
+                    success: function(response) {
+                        $('#id_clase').html(response); // Actualizar el select de clases con los resultados
+                    },
+                    error: function() {
+                        alert("Error al cargar las clases");
+                    }
+                });
+            } else {
+                $('#id_clase').html('<option value="">Selecciona una Clase</option>');
+            }
         });
 
         // Manejador del formulario

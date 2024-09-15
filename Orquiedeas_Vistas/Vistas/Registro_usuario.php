@@ -2,6 +2,7 @@
 include '../Backend/Conexion_bd.php';
 // Consultar los departamentos desde la base de datos
 $consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento` FROM `tb_departamento`");
+$consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -84,6 +85,18 @@ $consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento
                                 <label for="municipio" class="form-label">Municipio</label>
                                 <select class="form-select" id="municipio" name="id_municipio">
                                     <option value="">Selecciona un Municipio</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="Asociacion" class="form-label">Asociacion</label>
+                                <select class="form-select" id="Asociacion" name="id_aso">
+                                    <option value="">Selecciona una Asociacion</option>
+                                    <?php
+                                    //cargar las asociaciones de la base de datos 
+                                    while ($row = mysqli_fetch_assoc($consu1)) {
+                                        echo '<option value="' . $row['id_aso'] . '">' . $row['clase'] . '</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
