@@ -199,7 +199,7 @@
             reader.readAsDataURL(file);
         } else {
             document.getElementById('uploadStatus').innerHTML = "<p class='text-danger'>Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF).</p>";
-            event.target.value = '';  // Resetea el campo de carga de archivos
+            event.target.value = '';  // Resetea el campo de carga de archivos Cmom
         }
     });
     </script>
