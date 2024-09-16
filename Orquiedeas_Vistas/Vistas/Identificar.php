@@ -76,6 +76,18 @@
          const apiKey = 'lnuUNQJxXs2TU3hXVpM3o2q6jIwtZfIQr71nqpEbibM7P5NAJW';  // Reemplaza con tu API Key de Plant.id
     const apiUrl = '../Backend/recognize.php';  // Archivo PHP que manejará la solicitud
 
+
+    function copiarAlPortapapeles(texto) {
+        const elementoTemporal = document.createElement('textarea');
+        elementoTemporal.value = texto;
+        document.body.appendChild(elementoTemporal);
+        elementoTemporal.select();
+        document.execCommand('copy');
+        document.body.removeChild(elementoTemporal);
+        //alert('Nombre de la planta copiado: ' + texto);
+    }
+
+    
     // Función para enviar la imagen a recognize.php
     async function recognizeOrchid(base64Image) {
         const formData = new FormData();
@@ -128,6 +140,9 @@
             cameraStatus.innerHTML = "<p class='text-danger'>Tu dispositivo no soporta el acceso a la cámara.</p>";
         }
     });
+    //--------------------------------------------------------------
+    
+    //--------------------------------------------------------------
 
     // Función para cerrar la cámara
     closeCameraButton.addEventListener('click', function () {
@@ -172,14 +187,14 @@
 
                         if (data.result.classification && data.result.classification.suggestions) {
                             data.result.classification.suggestions.forEach(suggestion => {
-                                output += `<strong>Nombre de la planta:</strong> ${suggestion.name}<br>`;
+                                output += `<strong>Nombre de la planta:</strong> ${suggestion.name} <button class="btn btn-sm btn-info" onclick="copiarAlPortapapeles('${suggestion.name}')">Copiar</button><br>`;
                                 output += `<strong>Probabilidad:</strong> ${(suggestion.probability * 100).toFixed(2)}%<br>`;
 
                                 // Imágenes similares
                                 if (suggestion.similar_images) {
                                     output += `<strong>Imágenes similares:</strong><br>`;
                                     suggestion.similar_images.forEach(image => {
-                                        output += `<a href='${image.url}' target='_blank'><img src='${image.url_small}' alt='Imagen similar'></a><br>`;
+                                        output += `<a href='${image.url}' target='_blank'><img src='${image.url}' alt='Imagen similar' style='width: 300px; height: auto;'></a><br>`;
                                     });
                                 }
                                 output += "<hr>";
