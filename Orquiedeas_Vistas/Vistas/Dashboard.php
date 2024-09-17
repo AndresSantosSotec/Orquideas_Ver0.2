@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Verificar si la sesión está activa
+if (!isset($_SESSION['user_id'])) {
+    // Redirigir al login si no hay sesión
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -82,14 +92,14 @@
             <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
             <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
             <li><a href="#"><i class="fas fa-search"></i> <span>Revisión de Estado de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
+            <li><a href="../Backend/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
         </ul>
     </div>
 
     <!-- Contenido principal -->
     <div class="main-content" id="main-content">
         <h1>Bienvenido al Dashboard</h1>
-        <p>Este es un ejemplo básico de un dashboard con sidebar utilizando Bootstrap.</p>
+        
 
         <!-- Tarjetas que representan los módulos -->
         <div class="row">

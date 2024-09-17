@@ -205,3 +205,4 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
 </body>
 </html>
 
+
