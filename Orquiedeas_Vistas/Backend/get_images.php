@@ -2,36 +2,37 @@
 // Conexión a la base de datos
 include '../Backend/Conexion_bd.php';
 
-// Verifica si el ID ha sido proporcionado
-if (isset($_GET['id'])) {
-    $id_orquidea = intval($_GET['id']);
-    
-    // Consulta para obtener la imagen
-    $query = "SELECT foto FROM tb_orquidea WHERE id_orquidea = ?";
-    $stmt = $conexion->prepare($query);
-    $stmt->bind_param("i", $id_orquidea);
-    $stmt->execute();
-    $stmt->bind_result($foto);
-    $stmt->fetch();
-    $stmt->close();
+// Consulta para obtener todas las imágenes
+$query = "SELECT id_orquidea, foto FROM tb_orquidea";
+$result = $conexion->query($query);
 
-    // Ruta completa de la imagen
-    $image_path = '../../Recursos/img/Saved_images/Images/' . $foto;
+// Verifica si hay resultados
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $id_orquidea = $row['id_orquidea'];
+        $foto = $row['foto'];
 
-    // Verifica si el archivo existe
-    if (file_exists($image_path)) {
-        // Obtén el tipo de contenido
-        $info = getimagesize($image_path);
-        $content_type = $info['mime'];
-        
-        // Establecer el encabezado del contenido
-        header("Content-Type: $content_type");
+        // Ruta completa de la imagen
+        $image_path = '../../Recursos/img/Saved_images/Images/' . $foto;
 
-        // Leer la imagen
-        readfile($image_path);
-    } else {
-        echo "Imagen no encontrada.";
+        // Verifica si el archivo existe
+        if (file_exists($image_path)) {
+            // Obtén el tipo de contenido
+            $info = getimagesize($image_path);
+            $content_type = $info['mime'];
+
+            // Establecer el encabezado del contenido
+            header("Content-Type: $content_type");
+
+            // Leer la imagen
+            readfile($image_path);
+        } else {
+            echo "Imagen no encontrada para la orquídea con ID: " . $id_orquidea . "<br>";
+        }
     }
 } else {
-    echo "No se proporcionó un ID válido.";
+    echo "No se encontraron imágenes.";
 }
+
+$conexion->close();
+?>

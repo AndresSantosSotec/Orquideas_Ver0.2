@@ -1,0 +1,6 @@
+para las tareas pendietes de esta sema asignadas al DEV Andres Santos se categirza lo siguente
+-integracion de creacion reguistro de particpantes desde el login
+-integracion de modulo de reporte 
+-creacion de los sigunetes reportes:
+
+    *reporte de listado geeran
