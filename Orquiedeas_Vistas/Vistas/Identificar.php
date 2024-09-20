@@ -73,7 +73,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
     <script>
-         const apiKey = 'lnuUNQJxXs2TU3hXVpM3o2q6jIwtZfIQr71nqpEbibM7P5NAJW';  // Reemplaza con tu API Key de Plant.id
+         const apiKey = 'OEIpwUZDZVaQLKPumB5zd0D1rnfkA05bIDIWokqwQfOwcT3dHa';  // Reemplaza con tu API Key de Plant.id
     const apiUrl = '../Backend/recognize.php';  // Archivo PHP que manejará la solicitud
 
 

@@ -1,7 +1,7 @@
 <?php
 
 // API Key obtenida desde tu cuenta en Plant.id
-$apiKey = 'lnuUNQJxXs2TU3hXVpM3o2q6jIwtZfIQr71nqpEbibM7P5NAJW'; // Reemplaza esto con tu API key
+$apiKey = 'OEIpwUZDZVaQLKPumB5zd0D1rnfkA05bIDIWokqwQfOwcT3dHa'; // Reemplaza esto con tu API key
 
 // Verificar si hay una imagen enviada mediante POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
