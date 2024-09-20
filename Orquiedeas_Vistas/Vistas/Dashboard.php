@@ -23,84 +23,17 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Enlace a FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
-
-    <!-- Estilos CSS personalizados -->
-    <style>
-        .card-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .card-icon.orquidea {
-            color: #28a745;
-        }
-
-        .card-icon.perfiles {
-            color: #17a2b8;
-        }
-
-        .card-icon.identificacion {
-            color: #ffc107;
-        }
-
-        .card-icon.juzgamiento {
-            color: #6c757d;
-        }
-
-        .card-icon.reporte {
-            color: #007bff;
-        }
-
-        .card-icon.revision {
-            color: #dc3545;
-        }
-
-        .card {
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .sidebar.collapsed {
-            width: 60px;
-        }
-
-        .main-content.collapsed {
-            margin-left: 60px;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            transition: margin-left 0.3s;
-        }
-    </style>
+    <link rel="stylesheet" href="../../Recursos/css/icons.css">
 </head>
 
 <body>
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <button class="toggle-button" id="toggle-button">☰</button>
-        <h2>Admin Panel</h2>
-        <ul>
-            <li><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-            <li><a href="#"><i class="fas fa-plus-circle"></i> <span>Registro de Orquídeas</span></a></li>
-            <li><a href="Registro_usuario.php"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
-            <li><a href="Identificar.php"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-search"></i> <span>Revisión de Estado de Orquídeas</span></a></li>
-            <li><a href="../Backend/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
-        </ul>
-    </div>
+    <?php include '../Vistas/modales/side.php';?>
 
     <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-        <h1>Bienvenido al Dashboard</h1>
         
-
+        <h1>Bienvenido al Dashboard</h1>
         <!-- Tarjetas que representan los módulos -->
         <div class="row">
             <!-- Registro de Orquídeas -->
@@ -181,23 +114,7 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
-    <script>
-        // Función para enviar mensajes de WhatsApp al grupo
-        function enviarMensajeWhatsApp() {
-            let mensaje = "Mensaje de prueba enviado desde el Dashboard.";
-            let urlWhatsapp = "https://wa.me/?text=" + encodeURIComponent(mensaje);
-            window.open(urlWhatsapp, '_blank');
-        }
-
-        // Funcionalidad de colapsar y expandir el sidebar
-        document.getElementById('toggle-button').addEventListener('click', function () {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
-        });
-    </script>
+    <script src="../../Recursos/js/side.js"></script>
 </body>
 
 </html>
