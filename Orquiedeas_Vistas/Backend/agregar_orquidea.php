@@ -16,7 +16,7 @@ header('Content-Type: application/json');
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verifica si todos los campos obligatorios están presentes
-        if (empty($_POST['nombre_planta']) || empty($_POST['origen']) || empty($_POST['id_participante']) || empty($_POST['id_grupo']) || empty($_POST['id_clase']) || !isset($_POST['hibrida'])) {
+        if (empty($_POST['nombre_planta']) || empty($_POST['origen']) || empty($_POST['id_participante']) || empty($_POST['id_grupo']) || empty($_POST['id_clase'])) {
             throw new Exception('Todos los campos obligatorios no fueron enviados.');
         }
 
@@ -26,7 +26,6 @@ try {
         $id_participante = (int)$_POST['id_participante'];
         $id_grupo = (int)$_POST['id_grupo'];
         $id_clase = (int)$_POST['id_clase'];
-        $hibrida = (int)$_POST['hibrida'];
 
         // Generar el código de orquídea basado en la fecha y hora
         $codigo_orquidea = date('YmdHis');
@@ -81,8 +80,8 @@ try {
         $result->saveToFile($qr_filepath);
 
         // Insertar los datos en la base de datos
-        $query = "INSERT INTO tb_orquidea (nombre_planta, origen, codigo_orquidea, id_participante, id_grupo, id_clase, hibrida, foto, qr_code, fecha_creacion, fecha_actualizacion)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+        $query = "INSERT INTO tb_orquidea (nombre_planta, origen, codigo_orquidea, id_participante, id_grupo, id_clase, foto, qr_code, fecha_creacion, fecha_actualizacion)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
         $stmt = $conexion->prepare($query);
 
         // Verificar si la consulta está preparada correctamente
@@ -91,14 +90,13 @@ try {
         }
 
         // Asociar los parámetros a la consulta
-        $stmt->bind_param("sssiiisss", 
+        $stmt->bind_param("sssiiiss", 
             $nombre_planta, 
             $origen, 
             $codigo_orquidea, 
             $id_participante, 
             $id_grupo, 
-            $id_clase, 
-            $hibrida, 
+            $id_clase,  
             $foto, 
             $qr_filename // Guardar el nombre del archivo QR
         );
@@ -115,6 +113,7 @@ try {
         ]);
 
         $stmt->close();
+        $conexion->close();  // Cerrar la conexión
     } else {
         throw new Exception('Método no permitido');
     }

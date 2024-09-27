@@ -58,8 +58,8 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
                                 <label for="origen" class="form-label">Origen</label>
                                 <select class="form-select" id="origen" name="origen" required>
                                     <option value="">Selecciona el Origen</option>
-                                    <option value="Natural">Natural</option>
-                                    <option value="Laboratorio">Laboratorio</option>
+                                    <option value="Especie">Especie</option>
+                                    <option value="Hibrida">Hibrida</option>
                                 </select>
                             </div>
                         </div>
@@ -84,15 +84,6 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
                                 <label for="id_clase" class="form-label">Clase</label>
                                 <select class="form-select" id="id_clase" name="id_clase" required>
                                     <option value="">Selecciona una Clase</option>
-                                </select>
-                            </div>
-
-                            <!-- Híbrida (booleano) -->
-                            <div class="mb-3 col-md-4">
-                                <label for="hibrida" class="form-label">¿Es Híbrida?</label>
-                                <select class="form-select" id="hibrida" name="hibrida" required>
-                                    <option value="0">No</option>
-                                    <option value="1">Sí</option>
                                 </select>
                             </div>
                         </div>
