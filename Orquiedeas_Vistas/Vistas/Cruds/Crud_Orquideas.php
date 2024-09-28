@@ -9,6 +9,7 @@ if (!$conexion) {
 // Consultar las orquídeas con INNER JOIN a grupo, clase y participante
 $query = "
     SELECT 
+        o.id_orquidea, 
         o.codigo_orquidea,
         p.nombre AS nombre_participante,
         g.Cod_Grupo,
@@ -30,10 +31,11 @@ $orquideas = mysqli_query($conexion, $query);
             <h2 style="font-size: 1.5rem;">Resultados</h2> <!-- Reduciendo el tamaño del encabezado -->
         </div>
         <div class="card-body" style="padding: 10px;"> <!-- Ajustando el padding de la card -->
-            <a href="agregar_registro.php" class="btn btn-dark mb-3">+ Agregar Nuevo Registro</a>
+            <a href="Neva_orquidea.php" class="btn btn-dark mb-3">+ Agregar Nuevo Registro</a>
             <table class="table table-bordered table-striped table-sm"> <!-- Usando la clase .table-sm para reducir tamaño de tabla -->
                 <thead class="thead-dark">
                     <tr>
+                        <th>id</th>
                         <th>Código Orquídea</th>
                         <th>Participante</th>
                         <th>Código Grupo</th>
@@ -47,6 +49,7 @@ $orquideas = mysqli_query($conexion, $query);
                     if ($orquideas && mysqli_num_rows($orquideas) > 0) {
                         while ($row = mysqli_fetch_assoc($orquideas)) { ?>
                             <tr>
+                                <td><?php echo $row['id_orquidea']; ?></td>
                                 <td><?php echo $row['codigo_orquidea']; ?></td>
                                 <td><?php echo $row['nombre_participante']; ?></td>
                                 <td><?php echo $row['Cod_Grupo']; ?></td>
@@ -55,9 +58,10 @@ $orquideas = mysqli_query($conexion, $query);
                                 <td>
                                     <a href="editar.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-warning btn-sm">✏️</a> <!-- Botón reducido -->
                                     <a href="eliminar.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-danger btn-sm">🗑️</a> <!-- Botón reducido -->
+                                    <a href="eliminar.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-danger btn-sm">🗑️</a> <!-- Botón reducido -->
                                 </td>
                             </tr>
-                    <?php }
+                        <?php }
                     } else { ?>
                         <tr>
                             <td colspan="6" class="text-center">No se encontraron registros.</td>
