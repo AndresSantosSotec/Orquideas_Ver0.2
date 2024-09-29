@@ -191,7 +191,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
             });
         });
     });
-</script>
+    </script>
 
     <script src="../../Recursos/js/side.js"></script>
 
