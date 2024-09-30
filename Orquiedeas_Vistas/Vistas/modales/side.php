@@ -10,6 +10,7 @@
         <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
         <li><a href="Reportes.php"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
         <li><a href="#"><i class="fas fa-search"></i> <span>Revisión de Estado de Orquídeas</span></a></li>
+        <li><a href="#"><i class="fas fa-search"></i> <span>Premios</span></a></li>
         <li><a href="../Backend/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
     </ul>
 </div>
