@@ -91,7 +91,7 @@ if (!isset($_SESSION['user_id'])) {
                         <i class="fas fa-chart-bar card-icon reporte"></i>
                         <h5 class="card-title">Reporte de Orquídeas</h5>
                         <p class="card-text">Genera reportes sobre las orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
+                        <a href="Reportes.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
