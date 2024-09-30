@@ -31,12 +31,7 @@
                         <label for="edit_id_grupo" class="form-label">Grupo</label>
                         <select class="form-select" id="edit_id_grupo" name="id_grupo" required>
                             <option value="">Selecciona un Grupo</option>
-                            <?php
-                            // Llenar el select con los grupos de la base de datos
-                            while ($row = mysqli_fetch_assoc($grupos)) {
-                                echo '<option value="' . $row['id_grupo'] . '">' . $row['nombre_grupo'] . '</option>';
-                            }
-                            ?>
+                            <!-- Opciones se cargarán desde la base de datos -->
                         </select>
                     </div>
 
@@ -53,12 +48,6 @@
                         <label for="edit_id_participante" class="form-label">Participante</label>
                         <select class="form-select" id="edit_id_participante" name="id_participante" required>
                             <option value="">Selecciona un Participante</option>
-                            <?php
-                            // Llenar el select con los participantes de la base de datos
-                            while ($row = mysqli_fetch_assoc($participantes)) {
-                                echo '<option value="' . $row['id'] . '">' . $row['nombre'] . '</option>';
-                            }
-                            ?>
                         </select>
                     </div>
 

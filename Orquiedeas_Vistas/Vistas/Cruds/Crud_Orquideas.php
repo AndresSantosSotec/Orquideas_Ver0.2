@@ -42,7 +42,7 @@ $orquideas = mysqli_query($conexion, $query);
                     <?php
                     if ($orquideas && mysqli_num_rows($orquideas) > 0) {
                         while ($row = mysqli_fetch_assoc($orquideas)) { ?>
-                            <tr>
+                            <tr id="orquidea_<?php echo $row['id_orquidea']; ?>">
                                 <td><?php echo $row['id_orquidea']; ?></td>
                                 <td><?php echo $row['nombre_participante']; ?></td>
                                 <td><?php echo $row['Cod_Grupo']; ?></td>
@@ -52,16 +52,14 @@ $orquideas = mysqli_query($conexion, $query);
                                     <a href="ver.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-info btn-sm" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </a>
-
                                     <!-- Botón de Editar -->
                                     <button type="button" class="btn btn-warning btn-sm btn-editar" data-id="<?php echo $row['id_orquidea']; ?>" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
-
                                     <!-- Botón de Eliminar -->
-                                    <a href="eliminar.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-danger btn-sm" title="Eliminar">
+                                    <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-id="<?php echo $row['id_orquidea']; ?>" title="Eliminar">
                                         <i class="fas fa-trash-alt"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         <?php }
@@ -76,35 +74,65 @@ $orquideas = mysqli_query($conexion, $query);
     </div>
 </div>
 
-<!-- Incluir el modal de edición -->
-<?php include '../modales/modales_orquideas/editar.php'; ?>
-
-
-<!-- Agregar el script para abrir el modal y cargar los datos -->
+<!-- Agregar el script para manejar la eliminación y edición -->
 <script>
-    // Script para abrir el modal con los datos de la orquídea
+    // Manejo de la eliminación
+    $(document).on('click', '.btn-eliminar', function() {
+        var idOrquidea = $(this).data('id'); // Obtener el ID de la orquídea
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, realizar la eliminación con AJAX
+                $.ajax({
+                    url: '../Backend/eliminar_orquidea.php',
+                    type: 'POST',
+                    data: {
+                        id: idOrquidea
+                    },
+                    success: function(response) {
+                        if (response !== null && response !== undefined) {
+                            Swal.fire(
+                                'Eliminado!',
+                                'El registro ha sido eliminado.',
+                                'success'
+                            );
+                            $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    // Manejo de la edición
     $(document).on('click', '.btn-editar', function() {
         var idOrquidea = $(this).data('id'); // Obtener el ID de la orquídea
 
-        // Hacer una petición AJAX para obtener los datos de la orquídea
+        // Cargar la vista de edición en el div "contenido-principal"
         $.ajax({
-            url: '../../Backend/get_orquidea.php', // Archivo PHP que obtiene los datos de la orquídea
+            url: '../Vistas/Cards/Edit_orquidea.php', // Ruta de la vista de edición
             type: 'GET',
-            data: { id: idOrquidea },
-            success: function(data) {
-                var orquidea = JSON.parse(data);
-
-                // Rellenar los campos del modal con los datos obtenidos
-                $('#id_orquidea').val(orquidea.id_orquidea);
-                $('#edit_nombre_planta').val(orquidea.nombre_planta);
-                $('#edit_origen').val(orquidea.origen);
-                $('#edit_id_grupo').val(orquidea.id_grupo);
-                $('#edit_id_clase').val(orquidea.id_clase);
-                $('#edit_id_participante').val(orquidea.id_participante);
-                $('#edit_codigo_qr').val(orquidea.codigo_qr); // No editable
-
-                // Abrir el modal
-                $('#editOrquideaModal').modal('show');
+            data: { id_orquidea: idOrquidea }, // Pasar el ID de la orquídea
+            success: function(response) {
+                // Cargar el contenido en el div principal
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al cargar la página de edición:', err);
             }
         });
     });
