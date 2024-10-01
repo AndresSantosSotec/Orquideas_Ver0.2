@@ -1,6 +1,8 @@
 {
     "require": {
         "setasign/fpdf": "^1.8",
-        "endroid/qr-code": "^4.8"
+        "endroid/qr-code": "^4.8",
+        "symfony/translation": "^6.0",
+        "chillerlan/php-qrcode": "^5.0"
     }
 }
