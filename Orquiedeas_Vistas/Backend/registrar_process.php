@@ -16,32 +16,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ID de tipo de usuario siempre será 5
     $id_tipo_usu = 5;
 
-    // Encriptar la contraseña antes de guardarla
-    $password_encrypted = password_hash($contrasena, PASSWORD_DEFAULT);
-
-    // Capturar la fecha de registro
-    $fecha_registro = date('Y-m-d H:i:s'); // Fecha en formato Año-Mes-Día Hora:Minuto:Segundo
-    
-    // Verificar si los campos obligatorios no están vacíos
-    if (!empty($nombre_usuario) && !empty($correo) && !empty($contrasena) && !empty($id_departamento) && !empty($id_municipio)) {
-
-        // Preparar la consulta SQL para insertar los datos en la tabla
-        $sql = "INSERT INTO tb_usuarios (nombre_usuario, correo, contrasena, id_departamento, id_municipio, id_tipo_usu, id_aso, fecha_registro) 
-                VALUES ('$nombre_usuario', '$correo', '$password_encrypted', '$id_departamento', '$id_municipio', '$id_tipo_usu', '$id_aso', '$fecha_registro')";
-
-        // Ejecutar la consulta
-        if (mysqli_query($conexion, $sql)) {
-            $message= "Registro exitoso";
-            $messageType="success";
-            // Redirigir o mostrar mensaje de éxito
-        } else {
-            $message= "Error al registrar: " . mysqli_error($conexion);
-            $messageType="error";
-
-        }
+    // Validar la contraseña
+    if (!preg_match('/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $contrasena)) {
+        $message = "Error: La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.";
+        $messageType = "error";
     } else {
-        $message= "Por favor, completa todos los campos obligatorios.";
-        $messageType="error";
+        // Encriptar la contraseña antes de guardarla
+        $password_encrypted = password_hash($contrasena, PASSWORD_DEFAULT);
+
+        // Capturar la fecha de registro
+        $fecha_registro = date('Y-m-d H:i:s'); // Fecha en formato Año-Mes-Día Hora:Minuto:Segundo
+
+        // Verificar si los campos obligatorios no están vacíos
+        if (!empty($nombre_usuario) && !empty($correo) && !empty($contrasena) && !empty($id_departamento) && !empty($id_municipio)) {
+
+            // Preparar la consulta SQL para insertar los datos en la tabla
+            $sql = "INSERT INTO tb_usuarios (nombre_usuario, correo, contrasena, id_departamento, id_municipio, id_tipo_usu, id_aso, fecha_registro) 
+                    VALUES ('$nombre_usuario', '$correo', '$password_encrypted', '$id_departamento', '$id_municipio', '$id_tipo_usu', '$id_aso', '$fecha_registro')";
+
+            // Ejecutar la consulta
+            if (mysqli_query($conexion, $sql)) {
+                $message = "Registro exitoso";
+                $messageType = "success";
+            } else {
+                $message = "Error al registrar: " . mysqli_error($conexion);
+                $messageType = "error";
+            }
+        } else {
+            $message = "Por favor, completa todos los campos obligatorios.";
+            $messageType = "error";
+        }
     }
 }
 
@@ -81,10 +85,12 @@ mysqli_close($conexion);
     </div>
 
     <script>
-        // Redirigir después de 3 segundos
+        // Redirigir después de 3 segundos solo si el registro fue exitoso
+        <?php if ($messageType == 'success'): ?>
         setTimeout(function() {
             window.location.href = '../Vistas/Login.php';
         }, 3000);
+        <?php endif; ?>
     </script>
 </body>
 </html>

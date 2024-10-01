@@ -28,11 +28,11 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <!-- Sidebar -->
-    <?php include '../Vistas/modales/side.php';?>
+    <?php include '../Vistas/modales/side.php'; ?>
 
     <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-        
+
         <h1>Bienvenido al Dashboard</h1>
         <!-- Tarjetas que representan los módulos -->
         <div class="row">
@@ -53,7 +53,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="card">
                     <div class="card-body">
                         <i class="fas fa-user card-icon perfiles"></i>
-                        <h5 class="card-title">Perfiles de Usuario</h5>
+                        <h5 class="card-title">Perfiles de Participantes</h5>
                         <p class="card-text">Gestiona los perfiles de los usuarios.</p>
                         <a href="Registro_usuario.php" class="btn btn-primary">Ver más</a>
                     </div>
@@ -101,14 +101,26 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="card">
                     <div class="card-body">
                         <i class="fas fa-search card-icon revision"></i>
-                        <h5 class="card-title"> Estado de Orquídeas</h5>
+                        <h5 class="card-title">Estado de Orquídeas</h5>
                         <p class="card-text">Revisa el estado actual de las orquídeas.</p>
                         <a href="#" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <!-- Premios -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-trophy card-icon premios"></i>
+                        <h5 class="card-title">Premios</h5>
+                        <p class="card-text">Gestiona los premios de las orquídeas.</p>
+                        <a href="Premios.php" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Cierre del div.row -->
+    </div> <!-- Cierre del div.main-content -->
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

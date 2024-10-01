@@ -82,6 +82,8 @@ if (!isset($_SESSION['user_id'])) {
                 </button>
             </div>
         </div>
+    <!-- Contenido principal -->
+    <div class="main-content" id="main-content">
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
