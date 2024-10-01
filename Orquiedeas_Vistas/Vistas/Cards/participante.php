@@ -87,3 +87,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+    let isFormDirty = false;
+    let isFormSubmitted = false; // Nueva variable para detectar si el formulario ya fue enviado
+
+    // Detectar cambios en cualquier input del formulario
+    $('#form-participante :input').on('change', function() {
+        isFormDirty = true;
+    });
+
+    $('#form-participante').on('submit', function() {
+        isFormSubmitted = true; // Marcar el formulario como enviado
+    });
+
+    // Evento beforeunload solo se activará si el formulario no ha sido enviado
+    window.addEventListener('beforeunload', function (e) {
+        if (isFormDirty && !isFormSubmitted) {
+            e.preventDefault();
+            e.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?'; // Para navegadores más antiguos
+        }
+    });
+
+    </script>
