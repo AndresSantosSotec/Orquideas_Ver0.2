@@ -25,97 +25,101 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
+
+    <!-- Estilos personalizados para el main-content y las tarjetas pequeñas -->
+    <style>
+        #contenido-principal {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Alinear las tarjetas en el centro */
+            padding: 20px; /* Espacio alrededor del contenido principal */
+        }
+
+        .my-custom-card {
+            width: 200px; /* Ancho reducido */
+            height: auto; /* Altura ajustable al contenido */
+            margin: 10px; /* Separación entre tarjetas */
+            padding: 15px; /* Espaciado interno */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+            background-color: #f9f9f9; /* Color de fondo */
+        }
+
+        .my-custom-card .card-body {
+            padding: 10px; /* Espaciado interno en el cuerpo de la tarjeta */
+        }
+
+        .my-custom-card .card-title {
+            font-size: 16px; /* Tamaño de fuente más pequeño para el título */
+            margin-bottom: 10px;
+        }
+
+        .my-custom-card .card-text {
+            font-size: 14px; /* Tamaño de fuente más pequeño para el texto */
+            margin-bottom: 10px;
+        }
+
+        .my-custom-card .btn {
+            font-size: 12px; /* Botón pequeño */
+            padding: 5px 10px; /* Espaciado pequeño en el botón */
+        }
+    </style>
 </head>
 
 <body>
     <!-- Sidebar -->
     <?php include '../Vistas/modales/side_reportes.php';?>
 
-    <!-- Contenido principal -->
-    <div class="main-content" id="main-content">
-        
-        <h1>Bienvenido al Dashboard</h1>
-        <!-- Tarjetas que representan los módulos -->
-        <div class="row">
-            <!-- Registro de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-plus-circle card-icon orquidea"></i>
-                        <h5 class="card-title">Registro de Orquídeas</h5>
-                        <p class="card-text">Gestiona el registro de nuevas orquídeas.</p>
-                        <a href="Neva_orquidea.php" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Perfiles de Usuario -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-user card-icon perfiles"></i>
-                        <h5 class="card-title">Perfiles de Usuario</h5>
-                        <p class="card-text">Gestiona los perfiles de los usuarios.</p>
-                        <a href="Registro_usuario.php" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Identificación de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-leaf card-icon identificacion"></i>
-                        <h5 class="card-title">Identificación de Orquídeas</h5>
-                        <p class="card-text">Sistema para identificar orquídeas.</p>
-                        <a href="Identificar.php" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Juzgamiento -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-gavel card-icon juzgamiento"></i>
-                        <h5 class="card-title">Juzgamiento</h5>
-                        <p class="card-text">Sistema de juzgamiento de orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reporte de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-chart-bar card-icon reporte"></i>
-                        <h5 class="card-title">Reporte de Orquídeas</h5>
-                        <p class="card-text">Genera reportes sobre las orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revisión de Estado de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-search card-icon revision"></i>
-                        <h5 class="card-title"> Estado de Orquídeas</h5>
-                        <p class="card-text">Revisa el estado actual de las orquídeas.</p>
-                        <a href="#" class="btn btn-primary">Ver más</a>
-                    </div>
-                </div>
+    <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
+    <div id="contenido-principal">
+        <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
+        <div class="card my-custom-card">
+            <div class="card-body">
+                <h5 class="card-title">Formato Juzgamiento</h5>
+                <p class="card-text">Descarga el formato para el juzgamiento de orquídeas.</p>
+                <button class="btn btn-primary" onclick="downloadReport()">
+                    Descargar Formato
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- Versión completa de jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <script src="../../Recursos/js/side.js"></script>
+
+    <!-- Script para manejar la carga dinámica -->
+    <script>
+$(document).ready(function() {
+    // Interceptar el clic en los enlaces del menú
+    $('ul li a').click(function(e) {
+        e.preventDefault(); // Prevenir la acción predeterminada del enlace
+
+        var target = $(this).data('target'); // Obtener el archivo objetivo
+
+        // Usar AJAX para cargar el archivo PHP dentro del contenedor principal
+        $.ajax({
+            url: target,
+            type: 'GET',
+            success: function(response) {
+                $('#contenido-principal').html(response); // Reemplazar el contenido
+            },
+            error: function() {
+                alert('Error al cargar el contenido.');
+            }
+        });
+    });
+
+    // Función para descargar el reporte de juzgamiento
+    window.downloadReport = function() {
+        window.open('../../Vistas/Documentos/pdf/listado_pdf.php', '_blank');
+    }
+});
+</script>
+
+
 </body>
 
 </html>
