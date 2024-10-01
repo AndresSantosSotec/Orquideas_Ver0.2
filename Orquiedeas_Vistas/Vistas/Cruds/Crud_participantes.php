@@ -74,7 +74,10 @@ if (!$participantes) {
                                 <td><?php echo $row['pais']; ?></td>
                                 <td><?php echo $row['nombre_asociacion']; ?></td>
                                 <td>
-                                    <a href="editar_participante.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">✏️</a>
+                                    <!-- Botón de Editar -->
+                                    <button type="button" class="btn btn-warning btn-sm btn-editar" data-id="<?php echo $row['id']; ?>" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                     <a href="#" class="btn btn-danger btn-sm btn-eliminar" data-id="<?php echo $row['id']; ?>">🗑️</a>
                                 </td>
                             </tr>
@@ -131,6 +134,25 @@ if (!$participantes) {
                         Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
                     }
                 });
+            }
+        });
+    });
+
+    // Manejo de la edición
+    $(document).on('click', '.btn-editar', function() {
+        var idParticipante = $(this).data('id'); // Obtener el ID de la orquídea
+
+        // Cargar la vista de edición en el div "contenido-principal"
+        $.ajax({
+            url: '../Vistas/Cards/Edit_participante.php', // Ruta de la vista de edición
+            type: 'GET',
+            data: { id: idParticipante }, // Pasar el ID de la orquídea
+            success: function(response) {
+                // Cargar el contenido en el div principal
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al cargar la página de edición:', err);
             }
         });
     });
