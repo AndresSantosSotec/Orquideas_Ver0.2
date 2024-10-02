@@ -2,7 +2,9 @@
 // Incluir la conexión a la base de datos
 include '../Backend/Conexion_bd.php';
 
-// Verificar si se enviaron los datos del formulario
+$message = '';
+$messageType = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Capturar los datos del formulario
@@ -13,28 +15,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_municipio = mysqli_real_escape_string($conexion, $_POST['id_municipio']);
     $id_aso = mysqli_real_escape_string($conexion, $_POST['id_aso']);
     
-    // ID de tipo de usuario siempre será 5
-    $id_tipo_usu = 5;
+    $id_tipo_usu = 5; // Tipo de usuario fijo
 
     // Validar la contraseña
     if (!preg_match('/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $contrasena)) {
         $message = "Error: La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.";
         $messageType = "error";
     } else {
-        // Encriptar la contraseña antes de guardarla
-        $password_encrypted = password_hash($contrasena, PASSWORD_DEFAULT);
+        // Verificar si el correo ya existe
+        $check_email_query = "SELECT correo FROM tb_usuarios WHERE correo = '$correo'";
+        $check_email_result = mysqli_query($conexion, $check_email_query);
 
-        // Capturar la fecha de registro
-        $fecha_registro = date('Y-m-d H:i:s'); // Fecha en formato Año-Mes-Día Hora:Minuto:Segundo
+        if (mysqli_num_rows($check_email_result) > 0) {
+            $message = "Error: El correo ya está registrado.";
+            $messageType = "error";
+        } else {
+            // Encriptar la contraseña
+            $password_encrypted = password_hash($contrasena, PASSWORD_DEFAULT);
+            $fecha_registro = date('Y-m-d H:i:s'); // Fecha actual
 
-        // Verificar si los campos obligatorios no están vacíos
-        if (!empty($nombre_usuario) && !empty($correo) && !empty($contrasena) && !empty($id_departamento) && !empty($id_municipio)) {
-
-            // Preparar la consulta SQL para insertar los datos en la tabla
+            // Insertar los datos
             $sql = "INSERT INTO tb_usuarios (nombre_usuario, correo, contrasena, id_departamento, id_municipio, id_tipo_usu, id_aso, fecha_registro) 
                     VALUES ('$nombre_usuario', '$correo', '$password_encrypted', '$id_departamento', '$id_municipio', '$id_tipo_usu', '$id_aso', '$fecha_registro')";
 
-            // Ejecutar la consulta
             if (mysqli_query($conexion, $sql)) {
                 $message = "Registro exitoso";
                 $messageType = "success";
@@ -42,9 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Error al registrar: " . mysqli_error($conexion);
                 $messageType = "error";
             }
-        } else {
-            $message = "Por favor, completa todos los campos obligatorios.";
-            $messageType = "error";
         }
     }
 }
@@ -59,37 +59,34 @@ mysqli_close($conexion);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <style>
-        .message-box {
-            width: 80%;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 8px;
-            color: #fff;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-        }
-        .success {
-            background-color: #28a745; /* Verde */
-        }
-        .error {
-            background-color: #dc3545; /* Rojo */
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="message-box <?php echo $messageType; ?>">
-        <?php echo $message; ?>
-    </div>
-
     <script>
-        // Redirigir después de 3 segundos solo si el registro fue exitoso
+        // Mostrar SweetAlert dependiendo del resultado
         <?php if ($messageType == 'success'): ?>
-        setTimeout(function() {
-            window.location.href = '../Vistas/Login.php';
-        }, 3000);
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro exitoso',
+                text: '<?php echo $message; ?>',
+                confirmButtonText: 'Iniciar Sesión'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '../Vistas/Login.php';
+                }
+            });
+        <?php elseif ($messageType == 'error'): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '<?php echo $message; ?>',
+                confirmButtonText: 'Intentar de nuevo'
+                
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '../Vistas/registrologin.php';
+                }
+            });
         <?php endif; ?>
     </script>
 </body>
