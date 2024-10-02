@@ -1,6 +1,7 @@
 <?php
-require('fpdf/fpdf.php');
-include '../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión
+require('../fpdf186/fpdf.php');
+include '../../../Backend/Conexion_bd.php';
+require('../Documentos/fpdf186/fpdf.php');
 
 if (isset($_GET['id'])) {
     $id_orquidea = $_GET['id'];

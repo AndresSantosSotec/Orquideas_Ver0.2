@@ -16,7 +16,7 @@ if (isset($_GET['id_orquidea'])) {
             o.qr_code
         FROM tb_orquidea o
         WHERE o.id_orquidea = '$id_orquidea'";
-    
+
     $result = mysqli_query($conexion, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -65,8 +65,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                     <!-- Grupo -->
                     <div class="mb-3 col-md-4">
                         <label for="edit_id_grupo" class="form-label"><strong>Grupo:</strong></label>
-                        <?php 
-                        $grupo = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre_grupo FROM grupo WHERE id_grupo = '".$orquidea['id_grupo']."'"));
+                        <?php
+                        $grupo = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre_grupo FROM grupo WHERE id_grupo = '" . $orquidea['id_grupo'] . "'"));
                         ?>
                         <p><?php echo $grupo['nombre_grupo']; ?></p>
                     </div>
@@ -74,8 +74,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                     <!-- Clase -->
                     <div class="mb-3 col-md-4">
                         <label for="edit_id_clase" class="form-label"><strong>Clase:</strong></label>
-                        <?php 
-                        $clase = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre_clase FROM clase WHERE id_clase = '".$orquidea['id_clase']."'"));
+                        <?php
+                        $clase = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre_clase FROM clase WHERE id_clase = '" . $orquidea['id_clase'] . "'"));
                         ?>
                         <p><?php echo $clase['nombre_clase']; ?></p>
                     </div>
@@ -84,8 +84,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                 <div class="mb-3">
                     <!-- Participante -->
                     <label for="edit_id_participante" class="form-label"><strong>Participante:</strong></label>
-                    <?php 
-                    $participante = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre FROM tb_participante WHERE id = '".$orquidea['id_participante']."'"));
+                    <?php
+                    $participante = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT nombre FROM tb_participante WHERE id = '" . $orquidea['id_participante'] . "'"));
                     ?>
                     <p><?php echo $participante['nombre']; ?></p>
                 </div>
@@ -93,8 +93,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                 <div class="mb-3">
                     <!-- Foto de la orquídea -->
                     <label for="edit_foto" class="form-label"><strong>Foto de la Orquídea:</strong></label><br>
-                    <?php if (!empty($orquidea['foto'])) { 
-                        if (strpos($orquidea['foto'], '/') !== false) { 
+                    <?php if (!empty($orquidea['foto'])) {
+                        if (strpos($orquidea['foto'], '/') !== false) {
                             echo '<img src="../../uploads/' . $orquidea['foto'] . '" alt="Foto Orquídea" width="150">';
                         } else {
                             echo '<img src="data:image/jpeg;base64,' . base64_encode($orquidea['foto']) . '" alt="Foto Orquídea" width="150">';
@@ -107,8 +107,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                 <div class="mb-3">
                     <!-- Código QR -->
                     <label for="edit_qr_code" class="form-label"><strong>Código QR:</strong></label><br>
-                    <?php if (!empty($orquidea['qr_code'])) { 
-                        if (strpos($orquidea['qr_code'], '/') !== false) { 
+                    <?php if (!empty($orquidea['qr_code'])) {
+                        if (strpos($orquidea['qr_code'], '/') !== false) {
                             echo '<img src="../../uploads/' . $orquidea['qr_code'] . '" alt="Código QR" width="150">';
                         } else {
                             echo '<img src="data:image/png;base64,' . base64_encode($orquidea['qr_code']) . '" alt="Código QR" width="150">';
@@ -120,7 +120,7 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
 
                 <!-- Botón para descargar PDF -->
                 <div class="mb-3">
-                    <a href="descargar_orquidea_pdf.php?id=<?php echo $id_orquidea; ?>" class="btn btn-danger">
+                    <a href="../Vistas/pdf/descargar_orquidea_pdf.php?id=<?php echo $id_orquidea; ?>" class="btn btn-danger">
                         <i class="fas fa-file-pdf"></i> Descargar PDF
                     </a>
                 </div>
