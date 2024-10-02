@@ -1,18 +1,21 @@
 <div class="card">
     <div class="card-header">
-        <h3>Listado General de Orquídeas</h3>
-        <p>Genera un reporte de todas las orquídeas registradas en el período seleccionado.</p>
+        <h3>Formato Juzgamiento</h3>
+        <p>Descarga el formato para el juzgamiento de orquídeas.</p>
     </div>
     <div class="card-body">
-        <label for="start-date">Fecha de inicio:</label>
-        <input type="date" id="start-date-listado-general" class="form-control">
-        
-        <label for="end-date">Fecha de fin:</label>
-        <input type="date" id="end-date-listado-general" class="form-control">
+        <p>No es necesario seleccionar fechas para este reporte.</p>
     </div>
     <div class="card-footer">
-        <button class="btn btn-primary" onclick="generateReport('Listado General de Orquídeas', 'start-date-listado-general', 'end-date-listado-general')">
-            Generar Reporte
+        <button class="btn btn-primary" onclick="openPdf()">
+            Descargar Formato
         </button>
     </div>
 </div>
+
+<script>
+    function openPdf() {
+        // Abrir el PDF en una nueva pestaña
+        window.open('../Vistas/Documentos/pdf/Listado_general_Plantas.php', '_blank');
+    }
+</script>
