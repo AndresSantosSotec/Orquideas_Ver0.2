@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $id_tipo_usu = 5; // Tipo de usuario fijo
 
-    // Validar la contraseña
+    // Validar la contraseña por medio de una expresion regular 
     if (!preg_match('/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $contrasena)) {
         $message = "Error: La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.";
         $messageType = "error";

@@ -49,7 +49,8 @@ $orquideas = mysqli_query($conexion, $query);
                                 <td><?php echo $row['clase']; ?></td>
                                 <td><?php echo $row['nombre_grupo']; ?></td>
                                 <td>
-                                    <a href="ver.php?id=<?php echo $row['codigo_orquidea']; ?>" class="btn btn-info btn-sm" title="Ver">
+                                    <!-- Botón Ver para mostrar detalles en un card -->
+                                    <a href="javascript:void(0)" class="btn btn-info btn-sm btn-ver" data-id="<?php echo $row['id_orquidea']; ?>" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <!-- Botón de Editar -->
@@ -74,7 +75,12 @@ $orquideas = mysqli_query($conexion, $query);
     </div>
 </div>
 
-<!-- Agregar el script para manejar la eliminación y edición -->
+<!-- Contenedor donde se mostrará la vista de "Ver Orquídea" -->
+<div id="contenido-principal" class="container mt-3" style="max-width: 60%; margin: 0 auto;">
+    <!-- Aquí se cargarán los detalles de la orquídea -->
+</div>
+
+<!-- Agregar el script para manejar la eliminación, edición y ver -->
 <script>
     // Manejo de la eliminación
     $(document).on('click', '.btn-eliminar', function() {
@@ -93,22 +99,14 @@ $orquideas = mysqli_query($conexion, $query);
             if (result.isConfirmed) {
                 // Si el usuario confirma, realizar la eliminación con AJAX
                 $.ajax({
-                    url: '../Backend/eliminar_orquidea.php',
+                    url: '../../Backend/eliminar_orquidea.php',
                     type: 'POST',
                     data: {
                         id: idOrquidea
                     },
                     success: function(response) {
-                        if (response !== null && response !== undefined) {
-                            Swal.fire(
-                                'Eliminado!',
-                                'El registro ha sido eliminado.',
-                                'success'
-                            );
-                            $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
-                        } else {
-                            Swal.fire('Error!', response.message, 'error');
-                        }
+                        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+                        $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
                     },
                     error: function(err) {
                         Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
@@ -133,6 +131,25 @@ $orquideas = mysqli_query($conexion, $query);
             },
             error: function(err) {
                 console.error('Error al cargar la página de edición:', err);
+            }
+        });
+    });
+
+    // Manejo de ver orquídea en un card
+    $(document).on('click', '.btn-ver', function() {
+        var idOrquidea = $(this).data('id'); // Obtener el ID de la orquídea
+
+        // Realizar la solicitud AJAX para obtener los datos
+        $.ajax({
+            url: '../Vistas/Cards/ver_orquidea.php', // Ruta del archivo PHP para obtener los datos
+            type: 'GET',
+            data: { id_orquidea: idOrquidea }, // Enviar el ID de la orquídea
+            success: function(response) {
+                // Insertar la respuesta en el div "contenido-principal"
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al obtener los datos de la orquídea:', err);
             }
         });
     });
