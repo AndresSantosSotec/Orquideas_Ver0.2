@@ -9,24 +9,43 @@
     </ul>
 </div>
 
-
-
 <script>
-
     //COMENTARIO PARA INDICAR QUE ESTE CODIGO SE PUEDE QUITAR PARA QUITAR EL ERROR DE MENSAJE DE LOS FORMULARIOS------------------
 
     $('ul li a').on('click', function(e) {
     const link = $(this).attr('href'); // Obtener el enlace
+
+    // Validar si el enlace es válido antes de proceder
+    if (!link) {
+        console.error('No se encontró un enlace válido');
+        return;
+    }
+
+    // Si hay cambios en el formulario y no se ha enviado
     if (isFormDirty && !isFormSubmitted) {
-        e.preventDefault(); // Prevenir la acción predeterminada
-        const proceed = confirm('Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?');
-        if (proceed) {
-            isFormDirty = false; // Restablecer la variable para evitar otros mensajes
-            window.location.href = link; // Redirigir solo si confirma
-        }
+        e.preventDefault(); // Prevenir la acción predeterminada de navegación
+
+        Swal.fire({
+            title: 'Tienes cambios sin guardar',
+            text: '¿Estás seguro de que quieres salir sin guardar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, salir',
+            cancelButtonText: 'No, cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, reseteamos el indicador de cambios y redirigimos
+                isFormDirty = false; // Evita futuros mensajes de cambios
+                window.location.assign(link); // Redirige al enlace
+            }
+            // Si el usuario cancela, simplemente no hacemos nada y los datos se mantienen
+        });
     } else {
-        window.location.href = link; // Si no hay cambios, proceder con la navegación
+        // Si no hay cambios en el formulario, prevenimos la acción predeterminada
+        e.preventDefault(); 
+        window.location.assign(link); // Procedemos a redirigir normalmente
     }
 });
-
 </script>
