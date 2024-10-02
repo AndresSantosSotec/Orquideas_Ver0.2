@@ -4,6 +4,7 @@ require('../fpdf186/fpdf.php');
 include 'Conexion_bd.php';
 
 // Consultar los datos de la orquídea, incluyendo grupo, clase y participante
+//todo Huecos
 $query = "
     SELECT 
         o.id_orquidea, 
