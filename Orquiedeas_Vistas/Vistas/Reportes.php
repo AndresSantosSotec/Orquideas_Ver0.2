@@ -73,15 +73,7 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
     <div id="contenido-principal">
         <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
-        <div class="card my-custom-card">
-            <div class="card-body">
-                <h5 class="card-title">Formato Juzgamiento</h5>
-                <p class="card-text">Descarga el formato para el juzgamiento de orquídeas.</p>
-                <button class="btn btn-primary" onclick="downloadReport()">
-                    Descargar Formato
-                </button>
-            </div>
-        </div>
+        
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
