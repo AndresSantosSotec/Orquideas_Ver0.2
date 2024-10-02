@@ -1,11 +1,17 @@
 <?php
-// Usar __DIR__ para obtener la ruta absoluta y evitar problemas de rutas relativas
-require 'C:/xampp/htdocs/dashboard/Orqudiea_Ver0.2/vendor/autoload.php';
+require('../fpdf186/fpdf.php');
+// Usar realpath para convertir la ruta relativa en una absoluta
+/*$autoloadPath = realpath(__DIR__ . '/../../../vendor/autoload.php');
 
-
+// Verificar si el archivo autoload.php fue encontrado
+if ($autoloadPath) {
+    require $autoloadPath;
+} else {
+    die('No se encontró el autoload.php en la ruta especificada');
+}*/
 
 // Usar la clase FPDF sin namespace (FPDF no tiene un namespace)
-$pdf = new FPDF();  // Aquí no debe ir 'setasign\fpdf\fpdf', solo 'FPDF'
+$pdf = new FPDF();
 $pdf->AddPage();
 
 // Configuración de la fuente
