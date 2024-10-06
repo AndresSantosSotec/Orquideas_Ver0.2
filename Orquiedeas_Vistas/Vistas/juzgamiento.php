@@ -25,6 +25,11 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
+    <!-- Incluir SweetAlert -->
+    <!-- Incluir SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
     <!-- Estilos personalizados para el main-content y las tarjetas pequeñas -->
     <style>
@@ -38,7 +43,7 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .my-custom-card {
-            width: 200px;
+            width: 550px;
             /* Ancho reducido */
             height: auto;
             /* Altura ajustable al contenido */
