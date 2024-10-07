@@ -99,19 +99,19 @@ $orquideas = mysqli_query($conexion, $query);
             if (result.isConfirmed) {
                 // Si el usuario confirma, realizar la eliminación con AJAX
                 $.ajax({
-                    url: '../../Backend/eliminar_orquidea.php',
-                    type: 'POST',
-                    data: {
-                        id: idOrquidea
-                    },
-                    success: function(response) {
-                        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-                        $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
-                    },
-                    error: function(err) {
-                        Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
-                    }
-                });
+                        url: '../../Orquiedeas_Vistas/Backend/eliminar_orquidea.php',  // Ruta relativa
+                        type: 'POST',
+                        data: {
+                            id: idOrquidea
+                        },
+                        success: function(response) {
+                            Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+                            $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
+                        },
+                        error: function(err) {
+                            Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
+                        }
+                    });
             }
         });
     });
