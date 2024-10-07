@@ -79,7 +79,7 @@ if ($startDate && $endDate) {
         $pdf->Cell(70, 10, $clas, 0);  // Sin borde
         $pdf->Cell(10, 10, $especie, 0, 0, 'C');  // Marca "X" si es especie
         $pdf->Cell(10, 10, $hibrida, 0, 0, 'C');  // Marca "X" si es híbrida
-        $pdf->Cell(60, 10, utf8_decode($row['nombre_planta']), 0);  // Sin borde
+        $pdf->Cell(60, 10, utf8_decode($row['nombre_participante']), 0);  // Sin borde
         $pdf->Ln();
         
         $contador++;
