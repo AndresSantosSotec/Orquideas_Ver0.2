@@ -113,7 +113,7 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                     <div class="mb-3">
                         <label for="edit_foto" class="form-label">Foto de la Orquídea</label><br>
                         <?php if (!empty($orquidea['foto'])) { ?>
-                            <img src="../../uploads/<?php echo $orquidea['foto']; ?>" alt="Foto Orquídea" width="150">
+                            <img src="../../Recursos/img/Saved_images/Images/<?php echo $orquidea['foto']; ?>" alt="Foto Orquídea" width="150">
                         <?php } ?>
                         <input type="file" class="form-control" id="edit_foto" name="foto" accept="image/*">
                     </div>

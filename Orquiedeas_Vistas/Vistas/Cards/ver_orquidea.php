@@ -1,5 +1,5 @@
 <?php
-include '../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión
+include '../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión según tu estructura
 
 if (isset($_GET['id_orquidea'])) {
     $id_orquidea = $_GET['id_orquidea'];
@@ -94,11 +94,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                     <!-- Foto de la orquídea -->
                     <label for="edit_foto" class="form-label"><strong>Foto de la Orquídea:</strong></label><br>
                     <?php if (!empty($orquidea['foto'])) {
-                        if (strpos($orquidea['foto'], '/') !== false) {
-                            echo '<img src="../../uploads/' . $orquidea['foto'] . '" alt="Foto Orquídea" width="150">';
-                        } else {
-                            echo '<img src="data:image/jpeg;base64,' . base64_encode($orquidea['foto']) . '" alt="Foto Orquídea" width="150">';
-                        }
+                        $foto_path = '../../Recursos/img/Saved_images/Images/' . $orquidea['foto'];
+                        echo '<img src="' . $foto_path . '" alt="Foto Orquídea" width="150">';
                     } else { ?>
                         <p>No hay foto disponible.</p>
                     <?php } ?>
@@ -108,11 +105,8 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
                     <!-- Código QR -->
                     <label for="edit_qr_code" class="form-label"><strong>Código QR:</strong></label><br>
                     <?php if (!empty($orquidea['qr_code'])) {
-                        if (strpos($orquidea['qr_code'], '/') !== false) {
-                            echo '<img src="../../uploads/' . $orquidea['qr_code'] . '" alt="Código QR" width="150">';
-                        } else {
-                            echo '<img src="data:image/png;base64,' . base64_encode($orquidea['qr_code']) . '" alt="Código QR" width="150">';
-                        }
+                        $qr_path = '../../Recursos/img/Saved_images/Qr/' . $orquidea['qr_code'];
+                        echo '<img src="' . $qr_path . '" alt="Código QR" width="150">';
                     } else { ?>
                         <p>No hay código QR disponible.</p>
                     <?php } ?>
@@ -120,7 +114,7 @@ $participantes = mysqli_query($conexion, "SELECT id, nombre FROM tb_participante
 
                 <!-- Botón para descargar PDF -->
                 <div class="mb-3">
-                    <a href="../Vistas/pdf/descargar_orquidea_pdf.php?id=<?php echo $id_orquidea; ?>" class="btn btn-danger">
+                    <a href="../Vistas/Documentos/pdf/descargar_orquidea_pdf.php?id=<?php echo $id_orquidea; ?>" class="btn btn-danger">
                         <i class="fas fa-file-pdf"></i> Descargar PDF
                     </a>
                 </div>
