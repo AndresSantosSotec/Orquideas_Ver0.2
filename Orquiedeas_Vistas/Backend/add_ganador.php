@@ -69,7 +69,7 @@ mysqli_close($conexion);
 <body>
     <!-- Contenido del cuerpo de la página (si lo necesitas) -->
     
-    <!-- Bootstrap JS y Popper.js -->
+    <!-- <asdasdBootstrap JS y Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
