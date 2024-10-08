@@ -2,6 +2,7 @@
 // Incluye la conexión a la base de datos
 include 'Conexion_bd.php';
 
+
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtiene los valores del formulario
@@ -38,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = 'http://localhost/Proyecto_Orquidea/Orquiedeas_Vistas/Vistas/juzgamiento.php';
+                        window.location.href = '../Vistas/juzgamiento.php';
                     }
                 });
               </script>";
