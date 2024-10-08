@@ -1,7 +1,8 @@
+
 <div class="card my-custom-card">
     <div class="card-body">
         <h5 class="card-title"><i class="fas fa-award"></i> Agregar Ganador</h5>
-        <form method="POST" action="http://localhost/Proyecto_Orquidea/Orquiedeas_Vistas/Backend/add_ganador.php">
+        <form method="POST" action="../../../Backend/add_ganador.php">
             <!-- Select de Orquídea -->
             <div class="form-group">
                 <label for="id_orquidea">Orquídea:</label>
