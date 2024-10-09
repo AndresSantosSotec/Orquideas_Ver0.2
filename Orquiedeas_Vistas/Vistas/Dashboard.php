@@ -103,7 +103,7 @@ if (!isset($_SESSION['user_id'])) {
                         <i class="fas fa-search card-icon revision"></i>
                         <h5 class="card-title">Estado de Orquídeas</h5>
                         <p class="card-text">Revisa el estado actual de las orquídeas.</p>
-                        <a href="" class="btn btn-primary">Ver más</a>
+                        <a href="estado.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
