@@ -90,10 +90,10 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <!-- Sidebar -->
-    <?php include '../Vistas/modales/side_estado.php' ?>
+    <?php include '../Vistas/modales/side_estado.php'; ?>
     <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
     <div id="contenido-principal">
-        <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
+        <?php include '../Vistas/Cards/card_estado/std.php' ?>
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
