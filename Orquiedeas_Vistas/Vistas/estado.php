@@ -26,11 +26,11 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
     <!-- Incluir SweetAlert -->
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+   <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap JS Bundle (incluye Popper.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS Bundle (incluye Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -97,12 +97,10 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
-    <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- Asegúrate de que esté cargado antes -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- Versión completa de jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-    <script src="../../Recursos/js/side.js"></script> <!-- Tus scripts personalizados -->
-
+    <script src="../../Recursos/js/side.js"></script>
 
     <!-- Script para manejar la carga dinámica -->
     <script>
