@@ -1,99 +1,102 @@
 <?php
 require('../fpdf186/fpdf.php');
-// Usar realpath para convertir la ruta relativa en una absoluta
-/*$autoloadPath = realpath(__DIR__ . '/../../../vendor/autoload.php');
 
-// Verificar si el archivo autoload.php fue encontrado
-if ($autoloadPath) {
-    require $autoloadPath;
-} else {
-    die('No se encontró el autoload.php en la ruta especificada');
-}*/
+// Crear una clase personalizada para el PDF con mejoras en la estética
+class PDF extends FPDF
+{
+    function Header()
+    {
+        // Encabezado con fondo verde
+        $this->SetFillColor(0, 150, 0); // Verde suave
+        $this->Rect(0, 0, 210, 20, 'F'); // Fondo verde en todo el ancho
+        // Título del documento
+        $this->SetFont('Arial', 'B', 16);
+        $this->SetTextColor(255, 255, 255); // Texto blanco
+        $this->Cell(0, 10, utf8_decode('ASOCIACIÓN ALTAVERAPACENSE DE ORQUIDEOLOGÍA'), 0, 1, 'C');
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0, 10, utf8_decode('COBÁN, ALTA VERAPAZ, GUATEMALA, C.A.'), 0, 1, 'C');
+        $this->Cell(0, 10, utf8_decode('APARTADO POSTAL 115-16001'), 0, 1, 'C');
+        $this->Ln(10); // Espacio entre encabezado y contenido
+    }
 
-// Usar la clase FPDF sin namespace (FPDF no tiene un namespace)
-$pdf = new FPDF();
-$pdf->AddPage();
+    function Footer()
+    {
+        // Posición a 1.5 cm del final
+        $this->SetY(-15);
+        // Fuente para el pie de página
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, 'Página ' . $this->PageNo(), 0, 0, 'C');
+    }
 
-// Configuración de la fuente
-$pdf->SetFont('Arial', 'B', 12);
+    function ReporteJuzgamiento()
+    {
+        // Título de la tabla
+        $this->SetFont('Arial', 'B', 14);
+        $this->Cell(0, 10, utf8_decode('SHOW JUDGING'), 0, 1, 'C');
 
-// Título del documento
-$pdf->Cell(0, 10, 'ASOCIACION ALTAVERAPACENSE DE ORQUIDEOLOGIA', 0, 1, 'C');
-$pdf->Cell(0, 10, 'COBAN, ALTA VERAPAZ, GUATEMALA, C.A.', 0, 1, 'C');
-$pdf->Cell(0, 10, 'APARTADO POSTAL 115-16001', 0, 1, 'C');
+        // Crear los títulos de las columnas
+        $this->SetFont('Arial', 'B', 12);
+        $this->SetFillColor(230, 230, 230); // Fondo gris claro para encabezados
+        $this->Cell(30, 10, 'Grupo', 1, 0, 'C', true);
+        $this->Cell(30, 10, 'Subgrupo', 1, 0, 'C', true);
+        $this->Cell(30, 10, 'Clase', 1, 1, 'C', true);
 
-// Espacio entre título y contenido
-$pdf->Ln(10);
+        // Espacios para escribir los valores
+        $this->SetFont('Arial', '', 12);
+        $this->Cell(30, 10, '', 1, 0, 'C'); // Grupo
+        $this->Cell(30, 10, '', 1, 0, 'C'); // Subgrupo
+        $this->Cell(30, 10, '', 1, 1, 'C'); // Clase
 
-// Título de la tabla
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(0, 10, 'SHOW JUDGING', 0, 1, 'C');
+        // Crear una tabla para el registro de las orquídeas
+        $this->Ln(5); // Espacio entre tablas
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(20, 10, utf8_decode('No. REG'), 1, 0, 'C', true);
+        $this->Cell(100, 10, utf8_decode('NOMBRE: ESPECIE/HÍBRIDO'), 1, 0, 'C', true);
+        $this->Cell(30, 10, utf8_decode('EXP1'), 1, 1, 'C', true);
 
-// Definir el tamaño de la fuente para el contenido
-$pdf->SetFont('Arial', '', 10);
+        // Espacios en blanco para los registros de orquídeas
+        $this->SetFont('Arial', '', 12);
+        for ($i = 0; $i < 3; $i++) {
+            $this->Cell(20, 10, '', 1, 0, 'C'); // Espacio para No. REG
+            $this->Cell(100, 10, '', 1, 0, 'C'); // Espacio para NOMBRE
+            $this->Cell(30, 10, '', 1, 1, 'C'); // Espacio para EXP1
+        }
 
-// Crear los títulos de las columnas
-$pdf->Cell(30, 10, 'Grupo', 1, 0, 'C');
-$pdf->Cell(30, 10, 'Subgrupo', 1, 0, 'C');
-$pdf->Cell(30, 10, 'Clase', 1, 1, 'C');
+        // Mención Honorífica
+        $this->Ln(10);
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0, 10, utf8_decode('MENCIONES HONORÍFICAS'), 0, 1, 'C');
 
-// Espacios para escribir los valores
-$pdf->Cell(30, 10, 'A', 1, 0, 'C'); // Grupo
-$pdf->Cell(30, 10, 'A-1', 1, 0, 'C'); // Subgrupo
-$pdf->Cell(30, 10, '5', 1, 1, 'C'); // Clase
+        // Tabla para la mención honorífica
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(30, 10, '2do.', 1, 0, 'C', true);
+        $this->Cell(100, 10, '', 1, 1, 'C'); // Espacio para orquídea 2do. lugar
 
-// Crear una tabla para el registro de las orquídeas
-$pdf->Ln(5); // Espacio
+        $this->Cell(30, 10, '3er.', 1, 0, 'C', true);
+        $this->Cell(100, 10, '', 1, 1, 'C'); // Espacio para orquídea 3er. lugar
 
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(20, 10, 'No. REG', 1, 0, 'C');
-$pdf->Cell(80, 10, 'NOMBRE: ESPECIE/HIBRIDO', 1, 0, 'C');
-$pdf->Cell(30, 10, 'EXP1', 1, 1, 'C');
+        $this->Cell(30, 10, 'MH', 1, 0, 'C', true);
+        $this->Cell(100, 10, '', 1, 1, 'C'); // Espacio para Mención Honorífica
 
-// Espacios en blanco para los registros de orquídeas
-$pdf->SetFont('Arial', '', 10);
-for ($i = 0; $i < 3; $i++) {
-    $pdf->Cell(20, 10, '', 1, 0, 'C'); // Espacio para No. REG
-    $pdf->Cell(80, 10, '', 1, 0, 'C'); // Espacio para NOMBRE
-    $pdf->Cell(30, 10, '', 1, 1, 'C'); // Espacio para EXP1
+        // Firma de los jueces
+        $this->Ln(10);
+        $this->SetFont('Arial', 'B', 12);
+        $this->Cell(0, 10, utf8_decode('FIRMA DE LOS JUECES'), 0, 1, 'C');
+
+        // Crear espacios para las firmas
+        $this->Cell(80, 20, '', 1, 0, 'C'); // Espacio para primera firma
+        $this->Cell(30, 0, '', 0, 0); // Espacio entre firmas
+        $this->Cell(80, 20, '', 1, 1, 'C'); // Espacio para segunda firma
+    }
 }
 
-// Mención Honorífica
-$pdf->Ln(5);
-$pdf->SetFont('Arial', 'B', 12);
-$pdf->Cell(0, 10, 'MENCION HONORIFICA', 0, 1, 'C');
+// Crear un nuevo PDF
+$pdf = new PDF();
+$pdf->AddPage();
 
-// Tabla para la mención honorífica
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(30, 10, '2do.', 1, 0, 'C');
-$pdf->Cell(80, 10, '', 1, 1, 'C'); // Espacio para orquídea 2do. lugar
-
-$pdf->Cell(30, 10, '2do.', 1, 0, 'C');
-$pdf->Cell(80, 10, '', 1, 1, 'C'); // Espacio para orquídea 2do. lugar
-
-$pdf->Cell(30, 10, '3er.', 1, 0, 'C');
-$pdf->Cell(80, 10, '', 1, 1, 'C'); // Espacio para orquídea 3er. lugar
-
-$pdf->Cell(30, 10, 'MH', 1, 0, 'C');
-$pdf->Cell(80, 10, '', 1, 1, 'C'); // Espacio para Mención Honorífica
-
-$pdf->Cell(30, 10, 'MH', 1, 0, 'C');
-$pdf->Cell(80, 10, '', 1, 1, 'C'); // Espacio para Mención Honorífica
-
-// Firma de los jueces
-$pdf->Ln(10);
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(0, 10, 'FIRMA DE LOS JUECES', 0, 1, 'C');
-
-// Crear espacios para las firmas
-$pdf->Cell(90, 10, '', 1, 0, 'C'); // Espacio para primera firma
-$pdf->Cell(90, 10, '', 1, 1, 'C'); // Espacio para segunda firma
-
-// Fecha y número de página
-$pdf->Ln(10);
-$pdf->SetFont('Arial', 'I', 8);
-$pdf->Cell(0, 10, 'miercoles, 26 de noviembre de 2014', 0, 1, 'L');
-$pdf->Cell(0, 10, 'Pagina 5 de 76', 0, 1, 'R');
+// Llamar a la función para llenar el contenido del PDF
+$pdf->ReporteJuzgamiento();
 
 // Generar el PDF
 $pdf->Output();
+?>
