@@ -46,7 +46,7 @@ if (!$ganadores) {
             <h2 style="font-size: 1.5rem;">Ganadores Registrados</h2>
         </div>
         <div class="card-body" style="padding: 10px;">
-            <a href="Registro_ganador.php" class="btn btn-dark mb-3">+ Agregar Nuevo Ganador</a>
+            <a href="Add_ganador.php" class="btn btn-dark mb-3">+ Agregar Nuevo Ganador</a>
             <table class="table table-bordered table-striped table-sm">
                 <thead class="thead-dark">
                     <tr>
