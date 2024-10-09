@@ -17,8 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $id_tipo_usu = 5; // Tipo de usuario fijo
 
-    // Validar la contraseña por medio de una expresion regular 
-    if (!preg_match('/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $contrasena)) {
+    // Validar la contraseña por medio de una expresión regular (nueva)
+    if (!preg_match('/^(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/', $contrasena)) {
         $message = "Error: La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.";
         $messageType = "error";
     } else {
@@ -81,7 +81,6 @@ mysqli_close($conexion);
                 title: 'Error',
                 text: '<?php echo $message; ?>',
                 confirmButtonText: 'Intentar de nuevo'
-                
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = '../Vistas/registrologin.php';
