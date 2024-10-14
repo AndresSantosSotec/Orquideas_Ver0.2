@@ -26,79 +26,84 @@
                             <?php
                             include '../../../Backend/Conexion_bd.php'; // Cambia esta ruta según tu estructura de archivos
                             
-                            // Ajuste de la consulta SQL para traer el código, nombre, clase y participante
+                            // Intentar ejecutar la consulta SQL y manejar errores
                             $orquideas = $conexion->query("
-                                SELECT o.id_orquidea, o.codigo_orquidea, o.nombre_planta, c.nombre_clase, p.nombre AS nombre_participante
+                                SELECT o.id_orquidea, o.codigo_orquidea, o.nombre_planta, c.id_clase, c.nombre_clase, g.id_grupo, g.nombre_grupo, p.nombre AS nombre_participante
                                 FROM tb_orquidea o
                                 INNER JOIN clase c ON o.id_clase = c.id_clase
+                                INNER JOIN grupo g ON o.id_grupo = g.id_grupo
                                 INNER JOIN tb_participante p ON o.id_participante = p.id
                             ");
 
-                            while ($row = $orquideas->fetch_assoc()) { ?>
-                                <option value="<?php echo $row['id_orquidea']; ?>">
-                                    <?php echo $row['codigo_orquidea'] . " - " . $row['nombre_planta'] . " (" . $row['nombre_clase'] . ", Participante: " . $row['nombre_participante'] . ")"; ?>
-                                </option>
-                            <?php } ?>
+                            if ($orquideas === false) {
+                                // Si hay un error en la consulta, mostrarlo
+                                echo '<option>Error en la consulta: ' . $conexion->error . '</option>';
+                            } else {
+                                // Iterar sobre los resultados de la consulta
+                                while ($row = $orquideas->fetch_assoc()) {
+                                    ?>
+                                    <option value="<?php echo $row['id_orquidea']; ?>" 
+                                            data-id_clase="<?php echo $row['id_clase']; ?>" 
+                                            data-id_grupo="<?php echo $row['id_grupo']; ?>">
+                                        <?php echo $row['id_orquidea'] . " - " . $row['nombre_planta'] . " (" . $row['nombre_clase'] . ", Grupo: " . $row['nombre_grupo'] . ", Participante: " . $row['nombre_participante'] . ")"; ?>
+                                    </option>
+                                <?php
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
 
                     <!-- Aquí se mostrarán los detalles dinámicamente -->
-                    <div class="mb-3">
-                        <label for="nombre_clase" class="form-label">Clase</label>
-                        <input type="text" id="nombre_clase" class="form-control" readonly>
-                        <input type="hidden" name="id_clase" id="hidden_id_clase">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nombre_grupo" class="form-label">Grupo</label>
-                        <input type="text" id="nombre_grupo" class="form-control" readonly>
-                        <input type="hidden" name="id_grupo" id="hidden_id_grupo">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nombre_participante" class="form-label">Participante</label>
-                        <input type="text" id="nombre_participante" class="form-control" readonly>
-                    </div>
+                   
 
                     <input type="hidden" name="id_orquidea" id="hidden_id_orquidea">
+                    
                     <button type="submit" class="btn btn-primary">Asignar Trofeo</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- AJAX para cargar los detalles de la orquídea -->
+    <!-- jQuery para manejar el cambio en la selección de orquídea y llenar los selects de clase, grupo y participante -->
     <script>
         $(document).ready(function() {
             $('#id_orquidea').change(function() {
-                var id_orquidea = $(this).val();
-                
-                if (id_orquidea !== "") {
-                    $.ajax({
-                        url: '/Proyecto_Orquidea/Backend/fetch_orquidea_details.php',  // Ruta corregida
-                        method: 'POST',
-                        data: { id_orquidea: id_orquidea },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                // Llenar los campos de clase, grupo y participante automáticamente
-                                $('#nombre_clase').val(response.nombre_clase);
-                                $('#nombre_grupo').val(response.nombre_grupo);
-                                $('#nombre_participante').val(response.nombre_participante);
+                var selectedOption = $(this).find('option:selected');
+                var id_orquidea = selectedOption.val();
+                var id_clase = selectedOption.data('id_clase');
+                var id_grupo = selectedOption.data('id_grupo');
 
-                                // Asignar los campos ocultos que se usarán en el formulario para enviar
-                                $('#hidden_id_orquidea').val(response.id_orquidea);
-                                $('#hidden_id_clase').val(response.id_clase);
-                                $('#hidden_id_grupo').val(response.id_grupo);
-                            } else {
-                                alert(response.message);
-                            }
-                        },
-                        error: function() {
-                            alert("Error al cargar los datos.");
+                // Llenar el select de clase
+                $('#id_clase').html('<option value="' + id_clase + '">Clase correspondiente</option>');
+
+                // Llenar el select de grupo
+                $('#id_grupo').html('<option value="' + id_grupo + '">Grupo correspondiente</option>');
+
+                // Llenar el select de participante
+                $.ajax({
+                    url: '/Proyecto_Orquidea/Backend/fetch_participante.php',  // Ruta correcta para cargar los participantes
+                    method: 'POST',
+                    data: { id_orquidea: id_orquidea },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            var participanteOptions = '<option value="">Seleccione un participante</option>';
+                            $.each(response.participantes, function(index, participante) {
+                                participanteOptions += '<option value="' + participante.id + '">' + participante.nombre + '</option>';
+                            });
+                            $('#id_participante').html(participanteOptions);
+                        } else {
+                            alert(response.message);
                         }
-                    });
-                }
+                    },
+                    error: function() {
+                        alert("Error al cargar los participantes.");
+                    }
+                });
+
+                // Asignar los valores a los campos ocultos
+                $('#hidden_id_orquidea').val(id_orquidea);
             });
         });
     </script>
