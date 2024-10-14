@@ -115,7 +115,7 @@ if (!isset($_SESSION['user_id'])) {
                         <i class="fas fa-trophy card-icon premios"></i>
                         <h5 class="card-title">Premios</h5>
                         <p class="card-text">Gestiona los premios de las orquídeas.</p>
-                        <a href="Premios.php" class="btn btn-primary">Ver más</a>
+                        <a href="Trofeos.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>

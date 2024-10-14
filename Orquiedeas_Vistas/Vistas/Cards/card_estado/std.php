@@ -21,7 +21,6 @@ $query = "
 $orquideas = mysqli_query($conexion, $query);
 ?>
 
-
 <div class="container mt-3" style="max-width: 60%; margin: 0 auto;">
     <!-- Resultados -->
     <div class="card" style="font-size: 0.9rem;">
@@ -45,10 +44,10 @@ $orquideas = mysqli_query($conexion, $query);
                 <tbody>
                     <?php
                     if ($orquideas && mysqli_num_rows($orquideas) > 0) {
-                        while ($row = mysqli_fetch_assoc($orquideas)) { 
+                        while ($row = mysqli_fetch_assoc($orquideas)) {
                             // Asignamos color según el estado
-                            $estadoColor = ($row['estado'] == 'participando') ? 'green' : 'red'; 
-                        ?>
+                            $estadoColor = ($row['estado'] == 'participando') ? 'green' : 'red';
+                    ?>
                             <tr id="orquidea_<?php echo $row['id_orquidea']; ?>">
                                 <td><?php echo $row['id_orquidea']; ?></td>
                                 <td><?php echo $row['nombre_participante']; ?></td>
@@ -68,9 +67,6 @@ $orquideas = mysqli_query($conexion, $query);
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <!-- Botón de Eliminar -->
-                                    <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-id="<?php echo $row['id_orquidea']; ?>" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
                                 </td>
                             </tr>
                         <?php }
@@ -85,8 +81,5 @@ $orquideas = mysqli_query($conexion, $query);
     </div>
 </div>
 
-<!-- Contenedor donde se mostrará la vista de "Ver Orquídea" -->
-
-
-<!-- Agregar el script para manejar la eliminación, edición y ver -->
+<!-- Aquí va el script justo antes de cerrar el body -->
 

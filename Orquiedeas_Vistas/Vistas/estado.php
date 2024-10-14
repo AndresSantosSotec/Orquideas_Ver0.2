@@ -26,11 +26,11 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
     <!-- Incluir SweetAlert -->
-   <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Bootstrap JS Bundle (incluye Popper.js) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle (incluye Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -96,11 +96,33 @@ if (!isset($_SESSION['user_id'])) {
         <?php include '../Vistas/Cards/card_estado/std.php' ?>
     </div>
 
+
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- Versión completa de jQuery -->
+    <!-- Incluye jQuery antes de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <script src="../../Recursos/js/side.js"></script>
+    <script>
+
+    $(document).on('click', '.btn-editar', function() {
+        var idOrquidea = $(this).data('id'); // Obtener el ID de la orquídea
+
+        // Cargar la vista de edición directamente en el contenedor principal
+        $.ajax({
+            url: '../Vistas/Cards/card_estado/edit_std.php', // Ruta del archivo PHP que se va a cargar
+            type: 'GET',
+            data: { id_orquidea: idOrquidea }, // Enviar el ID de la orquídea a la solicitud
+            success: function(response) {
+                // Reemplazar el contenido de #contenido-principal con la respuesta (edit_std.php)
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al cargar la página de edición de estado:', err);
+            }
+        });
+    });
+</script>
 
     <!-- Script para manejar la carga dinámica -->
     <script>
