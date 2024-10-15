@@ -1,5 +1,5 @@
 <?php
-include '../../../Backend/Conexion_bd.php'; // Asegúrate de que la ruta sea correcta
+include 'Conexion_bd.php'; // Asegúrate de que la ruta sea correcta
 
 if (isset($_POST['id_orquidea'])) {
     $id_orquidea = $_POST['id_orquidea'];

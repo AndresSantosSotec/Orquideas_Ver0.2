@@ -4,7 +4,7 @@
     <ul>
         <li><a href="Dashboard.php" data-target="Dashboard.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
         <li><a href="#" data-target="../Vistas/Cards/Card_Trofeo/desig_trofeo.php"><i class="fas fa-plus-circle"></i> <span>dar Trofeo a orquidea</span></a></li>
-        <li><a href="estado.php" data-target="estado.php" id="reload-button"><i class="fas fa-tasks"></i> <span>Gestionar Trofeos</span></a></li>
+        <li><a href="#" data-target="../Vistas/Cards/Card_Trofeo/Crud_trofeos.php"><i class="fas fa-tasks"></i> <span>Gestionar Trofeos</span></a></li>
     </ul>
 </div>
 
