@@ -114,12 +114,23 @@ class PDF extends FPDF
 
     function LoadData($conn)
     {
-        // Consulta para traer los datos requeridos, incluyendo Cod_Grupo, id_grupo, y id_clase
+        // Asociaciones disponibles
+        $asociaciones = [
+            1 => 'AGO',
+            2 => 'ABO',
+            3 => 'AOAG',
+            4 => 'AAO',
+            5 => 'AOCAV',
+            6 => 'Int'
+        ];
+
+        // Consulta para traer los datos, incluyendo el trofeo por ID de orquídea.
         $query = "
             SELECT 
                 gr.Cod_Grupo, gr.id_grupo, c.id_clase, 
                 o.id_orquidea, o.nombre_planta, 
-                p.nombre AS propietario, g.posicion
+                p.nombre AS propietario, p.id_aso, g.posicion,
+                IF(t.id_trofeo IS NOT NULL, CONCAT(o.id_orquidea, ' X'), '') AS Trofeo
             FROM 
                 tb_ganadores g
             JOIN 
@@ -130,6 +141,8 @@ class PDF extends FPDF
                 clase c ON o.id_clase = c.id_clase
             JOIN 
                 grupo gr ON c.id_grupo = gr.id_grupo
+            LEFT JOIN 
+                tb_trofeo t ON o.id_orquidea = t.id_orquidea
             ORDER BY 
                 c.id_clase, gr.Cod_Grupo";
 
@@ -142,7 +155,8 @@ class PDF extends FPDF
         $data = [];
         while ($row = $result->fetch_assoc()) {
             $row['nombre_planta'] = strlen($row['nombre_planta']) > 25 ? substr($row['nombre_planta'], 0, 22) . '...' : $row['nombre_planta'];
-            $row['Clase_Grupo'] = "{$row['Cod_Grupo']}  {$row['id_grupo']} / {$row['id_clase']}";
+            $row['Clase_Grupo'] = "{$row['Cod_Grupo']}{$row['id_grupo']}/{$row['id_clase']}";
+            $row['Asociacion'] = $asociaciones[$row['id_aso']] ?? 'INT'; // Asignar asociación
             $data[] = $row;
         }
         return $data;
@@ -162,15 +176,14 @@ class PDF extends FPDF
             $pos1 = ($row['posicion'] == 1) ? 'X' : '';
             $pos2 = ($row['posicion'] == 2) ? 'X' : '';
             $pos3 = ($row['posicion'] == 3) ? 'X' : '';
-            $mh = '';
 
             $this->Row([
                 $row['Clase_Grupo'], 
                 $row['id_orquidea'], 
                 $row['nombre_planta'], 
                 $row['propietario'], 
-                'Asociacion', 
-                $pos1, $pos2, $pos3, $mh
+                $row['Asociacion'], 
+                $pos1, $pos2, $pos3, $row['Trofeo']
             ]);
         }
     }
