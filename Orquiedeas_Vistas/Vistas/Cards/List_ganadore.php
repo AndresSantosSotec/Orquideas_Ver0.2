@@ -11,8 +11,14 @@
         <input type="date" id="end-date-ganadores" class="form-control">
     </div>
     <div class="card-footer">
-        <button class="btn btn-primary" onclick="generateReport('Listado de Ganadores', 'start-date-ganadores', 'end-date-ganadores')">
+        <button class="btn btn-primary" onclick="openPdf()">
             Generar Reporte
         </button>
     </div>
 </div>
+<script>
+    function openPdf() {
+        // Abrir el PDF en una nueva pestaña
+        window.open('../Vistas/Documentos/pdf/PremiosListado.php', '_blank');
+    }
+</script>
