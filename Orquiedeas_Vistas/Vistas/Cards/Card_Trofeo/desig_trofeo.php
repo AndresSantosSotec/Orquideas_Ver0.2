@@ -18,7 +18,7 @@
             </div>
             <div class="card-body" style="padding: 10px;">
                 <!-- Formulario para seleccionar la orquídea -->
-                <form method="POST" action="/Proyecto_Orquidea/Backend/insert_trofeo.php"> <!-- Ruta corregida -->
+                <form method="POST" action="../Backend/insert_trofeo.php"> <!-- Ruta corregida -->
                     <div class="mb-3">
                         <label for="id_orquidea" class="form-label">Orquídea</label>
                         <select name="id_orquidea" id="id_orquidea" class="form-select" required>
@@ -82,7 +82,7 @@
 
                 // Llenar el select de participante
                 $.ajax({
-                    url: '/Proyecto_Orquidea/Backend/fetch_participante.php',  // Ruta correcta para cargar los participantes
+                    url: '../Backend/fetch_orquidea_details.php',  // Ruta correcta para cargar los participantes
                     method: 'POST',
                     data: { id_orquidea: id_orquidea },
                     dataType: 'json',
