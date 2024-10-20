@@ -7,6 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+//obtener el tipo de usuario desde la sesión
+$tipo_usuario=$_SESSION['tipo_usuario'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -128,6 +131,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
 
             <!-- Identificación de Orquídeas -->
+             <?php if ($tipo_usuario !=5): ?>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -138,8 +142,10 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Juzgamiento -->
+            <?php if ($tipo_usuario != 5): ?>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -150,8 +156,10 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Reporte de Orquídeas -->
+             <?php if($tipo_usuario != 5): ?>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -162,6 +170,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Revisión de Estado de Orquídeas -->
             <div class="col-lg-4 col-md-6 mb-4">
@@ -197,6 +206,8 @@ if (!isset($_SESSION['user_id'])) {
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('collapsed');
         });
+
+       
     </script>
 </body>
 

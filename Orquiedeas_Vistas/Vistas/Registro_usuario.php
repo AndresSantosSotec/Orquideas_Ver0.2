@@ -1,5 +1,30 @@
 <?php
+session_start();
 include '../Backend/Conexion_bd.php';
+// Obtener el tipo de usuario desde la sesión
+$tipo_usuario = $_SESSION['tipo_usuario'];
+$id_usuario = $_SESSION['user_id']; // Asegúrate de que tienes el id del usuario almacenado en la sesión
+
+$mostrar_boton = true; // Por defecto, se mostrará el botón
+
+// Si el usuario es de tipo 5, verificar si ya tiene un participante registrado
+if ($tipo_usuario == 5) {
+    // Consulta para verificar si el usuario ya tiene un registro
+    $consulta_registro = "SELECT COUNT(*) AS total FROM tb_participante WHERE id_usuario = ?";
+    $stmt = $conexion->prepare($consulta_registro);
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $fila = $resultado->fetch_assoc();
+    
+    // Si ya ha registrado un participante, no mostrar el botón
+    if ($fila['total'] > 0) {
+        $mostrar_boton = false;
+    }
+
+    $stmt->close();
+}
+
 // Consultar los departamentos desde la base de datos
 $consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento` FROM `tb_departamento`");
 $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
@@ -28,8 +53,10 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
         <ul>
             <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="#"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
+            <?php if($tipo_usuario != 5): ?>
             <li><a href="#"><i class="fas fa-users"></i> <span>Ver Usuarios</span></a></li>
             <li><a href="Identificar.php"><i class="fas fa-file-alt"></i> <span>Reporte de Usuarios</span></a></li>
+            <?php endif; ?>
             <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
         </ul>
     </div>
@@ -109,7 +136,12 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success">Agregar Participante</button>
+                                <!-- Mostar el botón solo si el usuario puede registrar -->
+                            <?php if($mostrar_boton): ?>
+                                 <button id="miBtn" type="submit" class="btn btn-success">Agregar Participante</button>
+                            <?php else: ?>
+                                <p>Ya has registrado un participante. </p>
+                            <?php endif; ?>
                     </form>
                 </div>
             </div>
@@ -118,6 +150,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
 
     <!-- Scripts para el sidebar y los selects dependientes -->
     <script>
+        
         // Detectar cambio en el select de departamento
         $('#departamento').on('change', function() {
             var id_departamento = $(this).val();
@@ -153,6 +186,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                 $('#pais').val(''); // Limpiar el campo de país cuando es Extranjero
             }
         });
+        
 
         // Enviar el formulario usando AJAX
         $('#form-participante').on('submit', function(e) {
@@ -170,8 +204,8 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                             title: 'Participante agregado',
                             text: response.message,
                             confirmButtonText: 'Aceptar'
-                        }).then(() => {
-                            window.location.href = 'Registro_usuario.php'; // Redirigir a la página de registro
+                        }).then(() => {  
+                        window.location.href = 'Registro_usuario.php'; // Redirigir a la página de registro
                         });
                     } else {
                         Swal.fire({
@@ -201,6 +235,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('collapsed');
         });
+
     </script>
 </body>
 </html>

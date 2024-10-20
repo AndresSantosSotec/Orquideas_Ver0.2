@@ -38,14 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar que los campos no estén vacíos
     if (!empty($email) && !empty($password)) {
         // Preparar la consulta SQL
-        $query = $conexion->prepare("SELECT id_usuario, contrasena FROM tb_usuarios WHERE correo = ?");
+        $query = $conexion->prepare("SELECT id_usuario, contrasena, id_tipo_usu  FROM tb_usuarios WHERE correo = ?");
         $query->bind_param('s', $email);
         $query->execute();
         $query->store_result();
 
         // Verificar si el usuario existe
         if ($query->num_rows === 1) {
-            $query->bind_result($user_id, $hashed_password);
+            $query->bind_result($user_id, $hashed_password, $tipo_usuario);
             $query->fetch();
 
             // Verificar la contraseña
@@ -53,7 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Inicio de sesión exitoso
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['email'] = $email;
-                header('Location: dashboard.php'); // Redirigir al panel de usuario
+                $_SESSION['tipo_usuario']= $tipo_usuario; // Guarda el tipo de usuario 
+                header('Location: Dashboard.php'); // Redirigir al panel de usuario
                 exit();
             } else {
                 $message = 'Contraseña incorrecta.';

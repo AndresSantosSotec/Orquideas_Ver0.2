@@ -1,6 +1,8 @@
 <?php
+session_start();
 include '../Backend/Conexion_bd.php';
 
+$tipo_usuario = $_SESSION['tipo_usuario'];
 // Consultar los participantes desde la base de datos
 $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_participante`");
 // Consultar los grupos de orquídeas
@@ -31,7 +33,9 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
         <ul>
             <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="#"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
+            <?php if($tipo_usuario != 5): ?>
             <li><a href="#"><i class="fas fa-users"></i> <span>Ver Orquídeas</span></a></li>
+            <?php endif; ?>
             <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
         </ul>
     </div>
