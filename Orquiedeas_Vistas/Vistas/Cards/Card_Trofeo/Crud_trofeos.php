@@ -1,5 +1,4 @@
 <?php
-include '../../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión
 
 // Consultar los trofeos con INNER JOIN a grupo y clase para obtener los nombres
 $query = "
@@ -21,7 +20,7 @@ $query = "
 $trofeos = mysqli_query($conexion, $query);
 ?>
 
-<div class="container mt-3" style="max-width: 80%; margin: 0 auto;">
+<div class="container mt-3" style="max-width: 70%; margin: 0 auto;">
     <!-- Resultados -->
     <div class="card" style="font-size: 0.9rem;">
         <div class="card-header bg-primary text-white">

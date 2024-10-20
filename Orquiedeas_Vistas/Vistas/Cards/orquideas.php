@@ -1,4 +1,4 @@
-<div class="main-content" id="main-content">
+
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header bg-primary text-white">
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
 
     <script>
         let isFormDirty = false;
