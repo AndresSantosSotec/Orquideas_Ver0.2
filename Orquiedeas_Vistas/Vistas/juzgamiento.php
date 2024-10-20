@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+include '../Backend/Conexion_bd.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,11 +27,11 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
     <!-- Incluir SweetAlert -->
-   <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Bootstrap JS Bundle (incluye Popper.js) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle (incluye Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -93,7 +94,7 @@ if (!isset($_SESSION['user_id'])) {
     <?php include '../Vistas/modales/side_juzga.php' ?>
     <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
     <div id="contenido-principal">
-        <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
+        <?php include '../Vistas/Cards/cards_juzgamiento/list_ganadores.php'; ?>
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
@@ -101,6 +102,71 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <script src="../../Recursos/js/side.js"></script>
+    <script>
+        // Manejo de la eliminación de ganadores
+        $(document).on('click', '.btn-eliminar', function() {
+            var idGanador = $(this).data('id'); // Obtener el ID del ganador
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, realizar la eliminación con AJAX
+                    $.ajax({
+                        url: '../Backend/eliminar_ganador.php',
+                        type: 'POST',
+                        data: {
+                            id: idGanador
+                        },
+                        success: function(response) {
+                            var jsonResponse = JSON.parse(response); // Convertir la respuesta JSON
+                            if (jsonResponse.status === 'success') {
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'El ganador ha sido eliminado.',
+                                    'success'
+                                );
+                                $('#ganador_' + idGanador).remove(); // Eliminar la fila de la tabla
+                            } else {
+                                Swal.fire('Error!', jsonResponse.message, 'error');
+                            }
+                        },
+                        error: function(err) {
+                            Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Manejo de la edición
+        $(document).on('click', '.btn-editar', function() {
+            var idGanador = $(this).data('id'); // Obtener el ID del ganador
+
+            // Cargar la vista de edición en el div "contenido-principal"
+            $.ajax({
+                url: '../Vistas/Cards/Edit_ganador.php', // Ruta de la vista de edición
+                type: 'GET',
+                data: {
+                    id: idGanador
+                }, // Pasar el ID del ganador
+                success: function(response) {
+                    // Cargar el contenido en el div principal
+                    $('#contenido-principal').html(response);
+                },
+                error: function(err) {
+                    console.error('Error al cargar la página de edición:', err);
+                }
+            });
+        });
+    </script>
 
     <!-- Script para manejar la carga dinámica -->
     <script>

@@ -36,9 +36,31 @@ $participantes = mysqli_query($conexion, $query);
 if (!$participantes) {
     die("Error en la consulta: " . mysqli_error($conexion));
 }
+// Año actual
+$year = date('Y');
+
+// Consulta para contar participantes registrados en el año actual
+$sql_participantes = "SELECT COUNT(*) AS total_participantes 
+                      FROM tb_participante 
+                      WHERE YEAR(fecha_creacion) = ?";
+$stmt1 = $conexion->prepare($sql_participantes);
+$stmt1->bind_param("i", $year);
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+$total_participantes = $result1->fetch_assoc()['total_participantes'];
+$stmt1->close();
 ?>
 
-<div class="container mt-3" style="max-width: 60%; margin: 0 auto;">
+<div class="col-md-4" style="position: relative; left: 35%; width: 50%;">
+<div class="card text-white bg-info mb-3">
+    <div class="card-header">Participantes Registrados (<?php echo $year; ?>)</div>
+    <div class="card-body">
+        <h5 class="card-title"><?php echo $total_participantes; ?> Participantes</h5>
+    </div>
+</div>
+</div>
+
+<div class="container mt-5" style="max-width: 60%; margin: 0 auto;">
     <!-- Resultados -->
     <div class="card" style="font-size: 0.9rem;">
         <div class="card-header bg-primary text-white">

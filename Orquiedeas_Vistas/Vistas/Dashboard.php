@@ -1,4 +1,6 @@
 <?php
+// Incluir conexión a la base de datos
+include "../Backend/Conexion_bd.php";
 session_start();
 
 // Verificar si la sesión está activa
@@ -7,7 +9,34 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+// Año actual
+$year = date('Y');
+
+// Consulta para contar participantes registrados en el año actual
+$sql_participantes = "SELECT COUNT(*) AS total_participantes 
+                      FROM tb_participante 
+                      WHERE YEAR(fecha_creacion) = ?";
+$stmt1 = $conexion->prepare($sql_participantes);
+$stmt1->bind_param("i", $year);
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+$total_participantes = $result1->fetch_assoc()['total_participantes'];
+
+// Consulta para contar orquídeas registradas en el año actual
+$sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
+                  FROM tb_orquidea 
+                  WHERE YEAR(fecha_creacion) = ?";
+$stmt2 = $conexion->prepare($sql_orquideas);
+$stmt2->bind_param("i", $year);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$total_orquideas = $result2->fetch_assoc()['total_orquideas'];
+
+$stmt1->close();
+$stmt2->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -24,103 +53,146 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../../Recursos/css/dashboard.css">
     <link rel="stylesheet" href="../../Recursos/css/icons.css">
+
 </head>
 
 <body>
     <!-- Sidebar -->
     <?php include '../Vistas/modales/side.php'; ?>
-
+    <!---->
     <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-
         <h1>Bienvenido al Dashboard</h1>
-        <!-- Tarjetas que representan los módulos -->
-        <div class="row">
-            <!-- Registro de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <i class="fas fa-plus-circle card-icon orquidea"></i>
-                        <h5 class="card-title">Registro de Orquídeas</h5>
-                        <p class="card-text">Gestiona el registro de nuevas orquídeas.</p>
-                        <a href="Neva_orquidea.php" class="btn btn-primary">Ver más</a>
+        <b>Haz click en el icono que quieres acceder</b>
+        <!-- Sub-sección: Datos del año actual -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Participantes Registrados (<?php echo $year; ?>)</div>
+                    <div class="card-body ">
+                        <h5 class="card-title"><?php echo $total_participantes; ?> Participantes</h5>
                     </div>
                 </div>
             </div>
 
+            <div class="col-lg-6">
+                <div class="card text-white bg-success mb-3 ">
+                    <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
+                    <div class="card-body crdbody">
+                        <h5 class="card-title"><?php echo $total_orquideas; ?> Orquídeas</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
             <!-- Perfiles de Usuario -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card crdbody" onclick="location.href='Registro_usuario.php'">
                     <div class="card-body">
                         <i class="fas fa-user card-icon perfiles"></i>
-                        <h5 class="card-title">Perfiles de Participantes</h5>
+                        <h5 class="card-title">Participantes</h5>
                         <p class="card-text">Gestiona los perfiles de los usuarios.</p>
-                        <a href="Registro_usuario.php" class="btn btn-primary">Ver más</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registro de Orquídeas -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card crdbody" onclick="location.href='Neva_orquidea.php'">
+                    <div class="card-body">
+                        <i class="fas fa-plus-circle card-icon orquidea"></i>
+                        <h5 class="card-title">Gestionar Orquídeas</h5>
+                        <p class="card-text">Gestiona y registra Orquídeas.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Identificación de Orquídeas -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card crdbody" onclick="location.href='Identificar.php'">
                     <div class="card-body">
                         <i class="fas fa-leaf card-icon identificacion"></i>
                         <h5 class="card-title">Identificación de Orquídeas</h5>
                         <p class="card-text">Sistema para identificar orquídeas.</p>
-                        <a href="Identificar.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
 
             <!-- Juzgamiento -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card" onclick="location.href='juzgamiento.php'">
                     <div class="card-body">
                         <i class="fas fa-gavel card-icon juzgamiento"></i>
                         <h5 class="card-title">Juzgamiento</h5>
                         <p class="card-text">Sistema de juzgamiento de orquídeas.</p>
-                        <a href="juzgamiento.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
 
             <!-- Reporte de Orquídeas -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card" onclick="location.href='Reportes.php'">
                     <div class="card-body">
                         <i class="fas fa-chart-bar card-icon reporte"></i>
                         <h5 class="card-title">Reporte de Orquídeas</h5>
-                        <p class="card-text">Genera reportes sobre las orquídeas.</p>
-                        <a href="Reportes.php" class="btn btn-primary">Ver más</a>
+                        <p class="card-text">Consulta reportes completos de orquídeas, su clasificación, ganadores, y accede a los formatos de inscripción y juzgamiento.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Revisión de Estado de Orquídeas -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card" onclick="location.href='estado.php'">
                     <div class="card-body">
                         <i class="fas fa-search card-icon revision"></i>
                         <h5 class="card-title">Estado de Orquídeas</h5>
                         <p class="card-text">Revisa el estado actual de las orquídeas.</p>
-                        <a href="estado.php" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
             </div>
 
             <!-- Premios -->
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
+                <div class="card" onclick="location.href='Trofeos.php'">
                     <div class="card-body">
                         <i class="fas fa-trophy card-icon premios"></i>
                         <h5 class="card-title">Premios</h5>
-                        <p class="card-text">Gestiona los premios de las orquídeas.</p>
-                        <a href="Trofeos.php" class="btn btn-primary">Ver más</a>
+                        <p class="card-text">Gestiona y otorga los premios de las orquídeas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--Formatos de Inscripccion -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card" onclick="descargarReportes()">
+                    <div class="card-body">
+                        <i class="fas fa-file card-icon premios"></i>
+                        <h5 class="card-title">Formato Inscripcion</h5>
+                        <p class="card-text">Descargar los formatos de inscripcion para registrarse de forma manuscrita.</p>
                     </div>
                 </div>
             </div>
         </div> <!-- Cierre del div.row -->
     </div> <!-- Cierre del div.main-content -->
+    <script>
+        function descargarReportes() {
+            const reportes = [
+                '../Vistas/Documentos/pdf/incri_participante.php',
+                '../Vistas/Documentos/pdf/Inscri_orquidea.php'
+            ];
+
+            reportes.forEach((reporte) => {
+                const link = document.createElement('a');
+                link.href = reporte;
+                link.download = reporte.split('/').pop() + '.pdf'; // Nombre del archivo descargado
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+    </script>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

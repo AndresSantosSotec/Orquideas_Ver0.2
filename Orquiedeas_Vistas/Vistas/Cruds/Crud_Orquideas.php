@@ -17,9 +17,31 @@ $query = "
     INNER JOIN tb_participante p ON o.id_participante = p.id";
 
 $orquideas = mysqli_query($conexion, $query);
+
+$year = date('Y');
+// Consulta para contar orquídeas registradas en el año actual
+$sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
+                  FROM tb_orquidea 
+                  WHERE YEAR(fecha_creacion) = ?";
+$stmt2 = $conexion->prepare($sql_orquideas);
+$stmt2->bind_param("i", $year);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$total_orquideas = $result2->fetch_assoc()['total_orquideas'];
+
+$stmt2->close();
 ?>
 
-<div class="container mt-3" style="max-width: 60%; margin: 0 auto;">
+<div class="col-md-4" style="position: relative; left: 35%; width: 50%;">
+<div class="card text-white bg-success mb-3">
+    <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
+    <div class="card-body">
+        <h5 class="card-title"><?php echo $total_orquideas; ?> Orquídeas</h5>
+    </div>
+</div>
+</div>
+
+<div class="container mt-5" style="max-width: 60%; margin: 0 auto;">
     <!-- Resultados -->
     <div class="card" style="font-size: 0.9rem;">
         <div class="card-header bg-primary text-white">

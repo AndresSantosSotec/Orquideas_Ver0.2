@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
     <div id="contenido-principal">
         <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
-        
+        <?php include '../Vistas/Cards/Formato_inscri.php';?>
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
