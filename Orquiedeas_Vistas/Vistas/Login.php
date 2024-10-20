@@ -1,28 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <!-- Enlace a Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a FontAwesome para los íconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="../../Recursos/css/EstilosLogin.css">
-    <style>
-        .error {
-            color: #dc3545;
-            text-align: center;
-        }
-        .success {
-            color: #28a745;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-
 <?php
+// Evitar que se guarden contraseñas en caché
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
+header("Pragma: no-cache"); // HTTP 1.0
+header("Expires: 0"); // Proxies
+
 // Iniciar la sesión
 session_start();
 $message = '';
@@ -53,8 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Inicio de sesión exitoso
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['email'] = $email;
-                $_SESSION['tipo_usuario']= $tipo_usuario; // Guarda el tipo de usuario 
-                header('Location: Dashboard.php'); // Redirigir al panel de usuario
+                header('Location: dashboard.php'); // Redirigir al panel de usuario
                 exit();
             } else {
                 $message = 'Contraseña incorrecta.';
@@ -68,10 +48,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = 'Por favor, complete todos los campos.';
     }
 
-    // Cerrar la conexión
     $conexion->close();
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Enlace a FontAwesome para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="../../Recursos/css/EstilosLogin.css">
+    <style>
+        .error {
+            color: #dc3545;
+            text-align: center;
+        }
+        .success {
+            color: #28a745;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
 <div class="login-container">
     <!-- Formulario de Login -->
@@ -85,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="error"><?php echo htmlspecialchars($message); ?></div>
             <?php endif; ?>
 
-            <form action="" method="POST">
+            <form action="" method="POST" autocomplete="off">
                 <div class="mb-3">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -135,5 +138,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 </body>
-
 </html>

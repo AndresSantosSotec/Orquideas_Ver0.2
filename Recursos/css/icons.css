@@ -1,0 +1,51 @@
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card-icon.orquidea {
+    color: #28a745;
+}
+
+.card-icon.perfiles {
+    color: #17a2b8;
+}
+
+.card-icon.identificacion {
+    color: #ffc107;
+}
+
+.card-icon.juzgamiento {
+    color: #6c757d;
+}
+
+.card-icon.reporte {
+    color: #007bff;
+}
+
+.card-icon.revision {
+    color: #dc3545;
+}
+
+.card {
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.main-content.collapsed {
+    margin-left: 60px;
+}
+
+.main-content {
+    margin-left: 250px;
+    transition: margin-left 0.3s;
+}

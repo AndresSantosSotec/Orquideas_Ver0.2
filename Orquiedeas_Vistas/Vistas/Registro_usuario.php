@@ -31,6 +31,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +54,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
         <ul>
             <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="#"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
-            <?php if($tipo_usuario != 5): ?>
+            <?php if($tipo_usuario !=5): ?>
             <li><a href="#"><i class="fas fa-users"></i> <span>Ver Usuarios</span></a></li>
             <li><a href="Identificar.php"><i class="fas fa-file-alt"></i> <span>Reporte de Usuarios</span></a></li>
             <?php endif; ?>
@@ -135,13 +136,11 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                                 <input type="text" class="form-control" id="pais" name="pais">
                             </div>
                         </div>
-
-                                <!-- Mostar el botón solo si el usuario puede registrar -->
-                            <?php if($mostrar_boton): ?>
-                                 <button id="miBtn" type="submit" class="btn btn-success">Agregar Participante</button>
-                            <?php else: ?>
-                                <p>Ya has registrado un participante. </p>
-                            <?php endif; ?>
+                        <?php  if($mostrar_boton): ?>
+                        <button type="submit" class="btn btn-success">Agregar Participante</button>
+                        <?php else:?>
+                            <p>Ya has registrado un participante.</p>
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>
@@ -160,7 +159,9 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                 $.ajax({
                     type: 'POST',
                     url: '../Backend/get_municipios.php', // Cambia la ruta según sea necesario
-                    data: { id_departamento: id_departamento },
+                    data: {
+                        id_departamento: id_departamento
+                    },
                     success: function(response) {
                         // Asegurarse de que el backend esté devolviendo un <option> válido para el select de municipios
                         $('#municipio').html(response); // Actualiza el select de municipios con los resultados
@@ -227,7 +228,7 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
             });
         });
         //asdjklalskdfj
-        
+
         // Funcionalidad de colapsar y expandir el sidebarweewr
         document.getElementById('toggle-button').addEventListener('click', function() {
             var sidebar = document.getElementById('sidebar');
@@ -237,7 +238,30 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
         });
 
     </script>
+     <script>
+        //print div para card dinamicos 
+        $(document).ready(function() {
+        // Interceptar el clic en los enlaces del menú
+        $('ul li a').click(function(e) {
+            e.preventDefault(); // Prevenir la acción predeterminada del enlace
+
+            var target = $(this).data('target'); // Obtener el archivo objetivo
+
+            // Usar AJAX para cargar el archivo PHP dentro del contenedor principal
+            $.ajax({
+                url: target,
+                type: 'GET',
+                success: function(response) {
+                    $('#contenido-principal').html(response); // Reemplazar el contenido
+                },
+                error: function() {
+                    alert('Error al cargar el contenido.');
+                }
+            });
+        });
+    });
+    </script>
+    
 </body>
+
 </html>
-
-
