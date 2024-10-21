@@ -173,6 +173,9 @@ include '../Backend/Conexion_bd.php';
         $(document).ready(function() {
             // Interceptar el clic en los enlaces del menú
             $('ul li a').click(function(e) {
+                if ($(this).hasClass('no-ajax')) {
+                    return; // Si es un enlace sin AJAX, no hacer nada
+                }
                 e.preventDefault(); // Prevenir la acción predeterminada del enlace
 
                 var target = $(this).data('target'); // Obtener el archivo objetivo

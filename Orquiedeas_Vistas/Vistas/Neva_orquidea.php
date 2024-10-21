@@ -1,13 +1,16 @@
 <?php
 include '../Backend/Conexion_bd.php';
+session_start();
 
-// Consultar los participantes desde la base de datos
+// Capturar el ID del usuario y el tipo de usuario desde la sesión
+$user_id = $_SESSION['user_id'];
+$user_type = $_SESSION['user_type'];
+
+// Consultar los participantes y los grupos desde la base de datos
 $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_participante`");
-// Consultar los grupos de orquídeas
 $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo`");
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -35,6 +38,12 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
 
     <!-- Script para abrir la cámara -->
     <script>
+        const userId = <?php echo json_encode($user_id); ?>;
+        const userType = <?php echo json_encode($user_type); ?>;
+
+        console.log("ID del Usuario:", userId);
+        console.log("Tipo de Usuario:", userType);
+        
         document.getElementById('abrir-camara').addEventListener('click', function() {
             const video = document.getElementById('video');
             const canvas = document.getElementById('canvas');

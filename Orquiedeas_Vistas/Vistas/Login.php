@@ -18,22 +18,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validar que los campos no estén vacíos
     if (!empty($email) && !empty($password)) {
-        // Preparar la consulta SQL
-        $query = $conexion->prepare("SELECT id_usuario, contrasena FROM tb_usuarios WHERE correo = ?");
+        // Preparar la consulta SQL para obtener el id_usuario, contrasena y id_tipo_usu
+        $query = $conexion->prepare("SELECT id_usuario, contrasena, id_tipo_usu FROM tb_usuarios WHERE correo = ?");
         $query->bind_param('s', $email);
         $query->execute();
         $query->store_result();
 
         // Verificar si el usuario existe
         if ($query->num_rows === 1) {
-            $query->bind_result($user_id, $hashed_password);
+            $query->bind_result($user_id, $hashed_password, $user_type);
             $query->fetch();
 
             // Verificar la contraseña
             if (password_verify($password, $hashed_password)) {
-                // Inicio de sesión exitoso
+                // Inicio de sesión exitoso, guardar datos en la sesión
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['email'] = $email;
+                $_SESSION['user_type'] = $user_type; // Captura del id_tipo_usu
+
+                // Redirigir al dashboard
                 header('Location: dashboard.php');
                 exit();
             } else {
@@ -58,32 +61,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <!-- Enlace a Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Enlace a FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="../../Recursos/css/EstilosLogin.css">
     <style>
-        .error {
-            color: #dc3545;
-            text-align: center;
-        }
-        .success {
-            color: #28a745;
-            text-align: center;
-        }
+        .error { color: #dc3545; text-align: center; }
+        .success { color: #28a745; text-align: center; }
     </style>
 </head>
 <body>
+    <!-- Logo de la universidad en la esquina superior derecha -->
+    <div style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+         <!-- Segundo logo -->
+        <img src="/Orquideas_Ver0.2/Recursos/img/LogoUMG.png" alt="Logo Universidad" style="width: 200px; height: auto;">    </div>
 
 <div class="login-container">
-    <!-- Formulario de Login -->
     <div class="login-form">
         <div class="login-box">
             <h2 class="text-center login-title">Iniciar Sesión</h2>
             <p class="text-center">Por favor inicia sesión con tu cuenta</p>
 
-            <!-- Mostrar mensaje de error o éxito -->
             <?php if (!empty($message)): ?>
                 <div class="error"><?php echo htmlspecialchars($message); ?></div>
             <?php endif; ?>
@@ -109,15 +106,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn btn-login w-100">Iniciar Sesión</button>
             </form>
 
-            <!-- Links adicionales -->
             <div class="login-links">
-                <p><a href="#">¿Quieres iniciar sesión como Participante o Usuario?</a></p>
                 <p><a href="registrologin.php">¿No tienes cuenta? Regístrate</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Imagen de Login con Logo -->
     <div class="login-image">
         <div class="text-center">
             <img src="../../Recursos/img/Logo-fotor-bg-remover-2024090519443.png" alt="Logo de Empresa">
@@ -126,7 +120,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- Scripts -->
 <script>
     function togglePassword() {
         const passwordField = document.getElementById('password');

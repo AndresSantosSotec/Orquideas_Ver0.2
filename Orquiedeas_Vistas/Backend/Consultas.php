@@ -1,13 +1,46 @@
 <?php
+session_start();
 include 'Conexion_bd.php';
 
-// Recibir los datos del formulario
+$id_usuario = $_SESSION['user_id']; // Obtener ID del usuario
+$user_type = $_SESSION['user_type']; // Obtener tipo del usuario
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verificar si la solicitud es para comprobar registro existente
+    if (isset($_POST['check_registro'])) {
+        $query = "SELECT COUNT(*) as total FROM tb_participante WHERE id_usuario = ?";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+
+        echo json_encode(['hasRegistro' => $total > 0]);
+        exit;
+    }
+
+    // Verificar si el usuario es tipo 5 y ya tiene un registro
+    if ($user_type == 5) {
+        $query = "SELECT COUNT(*) as total FROM tb_participante WHERE id_usuario = ?";
+        $stmt = $conexion->prepare($query);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+        $stmt->close();
+
+        if ($total > 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Solo puedes registrar un participante.']);
+            exit;
+        }
+    }
+
+    // Recibir los datos del formulario
     $nombre = $_POST['nombre'];
     $numero_telefonico = $_POST['numero_telefonico'];
     $direccion = $_POST['direccion'];
     $tipo_participante = $_POST['tipo_participante'];
-    $id_aso = isset($_POST['id_aso']) ? $_POST['id_aso'] : null; // Recibir la asociación
+    $id_aso = isset($_POST['id_aso']) ? $_POST['id_aso'] : null;
 
     // Si es nacional, obtener el departamento y municipio, y fijar el país como Guatemala
     if ($tipo_participante == '1') {
@@ -22,7 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Llamar a la función para insertar el participante
-    $resultado = insertarParticipante($nombre, $numero_telefonico, $direccion, $tipo_participante, $id_departamento, $id_municipio, $pais, $id_aso);
+    $resultado = insertarParticipante(
+        $nombre, $numero_telefonico, $direccion, $tipo_participante, 
+        $id_departamento, $id_municipio, $pais, $id_aso, $id_usuario
+    );
 
     // Enviar una respuesta en formato JSON al frontend
     if ($resultado) {
@@ -33,25 +69,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Función para insertar un participante en la base de datos
-function insertarParticipante($nombre, $numero_telefonico, $direccion, $id_tipo, $id_departamento, $id_municipio, $pais, $id_aso) {
+function insertarParticipante(
+    $nombre, $numero_telefonico, $direccion, $id_tipo, 
+    $id_departamento, $id_municipio, $pais, $id_aso, $id_usuario
+) {
     global $conexion;
 
-    // Preparar la consulta SQL para insertar los datos
-    $query = "INSERT INTO tb_participante (nombre, numero_telefonico, direccion, id_tipo, id_departamento, id_municipio, pais, id_aso, fecha_creacion, fecha_actualizacion) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+    $query = "INSERT INTO tb_participante 
+              (nombre, numero_telefonico, direccion, id_tipo, id_departamento, 
+               id_municipio, pais, id_aso, id_usuario, fecha_creacion, fecha_actualizacion) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
-    // Preparar la sentencia
     $stmt = $conexion->prepare($query);
-
-    // Verificar si se preparó la consulta correctamente
     if (!$stmt) {
         die("Error en la preparación de la consulta: " . $conexion->error);
     }
 
-    // Asociar los parámetros a la consulta
-    $stmt->bind_param("sssiiiss", $nombre, $numero_telefonico, $direccion, $id_tipo, $id_departamento, $id_municipio, $pais, $id_aso);
+    $stmt->bind_param("sssiiissi", $nombre, $numero_telefonico, $direccion, 
+                      $id_tipo, $id_departamento, $id_municipio, $pais, 
+                      $id_aso, $id_usuario);
 
-    // Ejecutar la consulta y devolver el resultado
     $resultado = $stmt->execute();
     $stmt->close();
 

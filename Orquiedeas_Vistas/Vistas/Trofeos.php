@@ -92,22 +92,25 @@ if (!isset($_SESSION['user_id'])) {
 $(document).ready(function() {
     // Interceptar el clic en los enlaces del menú
     $('ul li a').click(function(e) {
-        e.preventDefault(); // Prevenir la acción predeterminada del enlace
+    if ($(this).hasClass('no-ajax')) {
+        return; // Si es un enlace sin AJAX, no hacer nada
+    }
+    e.preventDefault(); // Prevenir la acción predeterminada del enlace
 
-        var target = $(this).data('target'); // Obtener el archivo objetivo
+    var target = $(this).data('target'); // Obtener el archivo objetivo
 
-        // Usar AJAX para cargar el archivo PHP dentro del contenedor principal
-        $.ajax({
-            url: target,
-            type: 'GET',
-            success: function(response) {
-                $('#contenido-principal').html(response); // Reemplazar el contenido
-            },
-            error: function() {
-                alert('Error al cargar el contenido.');
-            }
-        });
+    // Usar AJAX para cargar el archivo PHP dentro del contenedor principal
+    $.ajax({
+        url: target,
+        type: 'GET',
+        success: function(response) {
+            $('#contenido-principal').html(response); // Reemplazar el contenido
+        },
+        error: function() {
+            alert('Error al cargar el contenido.');
+        }
     });
+});
 });
 </script>
 <script>

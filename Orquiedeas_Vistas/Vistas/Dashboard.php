@@ -35,6 +35,9 @@ $total_orquideas = $result2->fetch_assoc()['total_orquideas'];
 
 $stmt1->close();
 $stmt2->close();
+
+// Capturar el tipo de usuario de la sesión
+$user_type = $_SESSION['user_type'];
 ?>
 
 <!DOCTYPE html>
@@ -57,26 +60,30 @@ $stmt2->close();
 </head>
 
 <body>
+        <!-- Logo de la universidad en la esquina superior derecha -->
+        <div style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+         <!-- Segundo logo -->
+        <img src="/Orquideas_Ver0.2/Recursos/img/Logo-fotor-bg-remover-2024090519443.png" alt="Logo 2" style="width: 100px; height: auto; margin-right: 10px;">
+        <img src="/Orquideas_Ver0.2/Recursos/img/LogoUMG.png" alt="Logo Universidad" style="width: 200px; height: auto;">    </div>
     <!-- Sidebar -->
     <?php include '../Vistas/modales/side.php'; ?>
     <!---->
-    <!-- Contenido principal -->
     <div class="main-content" id="main-content">
         <h1>Bienvenido al Dashboard</h1>
         <b>Haz click en el icono que quieres acceder</b>
         <!-- Sub-sección: Datos del año actual -->
         <div class="row mt-4">
-            <div class="col-lg-6">
+            <div class="col-lg-6 section-5">
                 <div class="card text-white bg-info mb-3">
                     <div class="card-header">Participantes Registrados (<?php echo $year; ?>)</div>
-                    <div class="card-body ">
+                    <div class="card-body">
                         <h5 class="card-title"><?php echo $total_participantes; ?> Participantes</h5>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-6">
-                <div class="card text-white bg-success mb-3 ">
+                <div class="card text-white bg-success mb-3">
                     <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
                     <div class="card-body crdbody">
                         <h5 class="card-title"><?php echo $total_orquideas; ?> Orquídeas</h5>
@@ -85,10 +92,9 @@ $stmt2->close();
             </div>
         </div>
 
-
         <div class="row">
             <!-- Perfiles de Usuario -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
                 <div class="card crdbody" onclick="location.href='Registro_usuario.php'">
                     <div class="card-body">
                         <i class="fas fa-user card-icon perfiles"></i>
@@ -99,7 +105,7 @@ $stmt2->close();
             </div>
 
             <!-- Registro de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
                 <div class="card crdbody" onclick="location.href='Neva_orquidea.php'">
                     <div class="card-body">
                         <i class="fas fa-plus-circle card-icon orquidea"></i>
@@ -110,7 +116,7 @@ $stmt2->close();
             </div>
 
             <!-- Identificación de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 " style="display: none;">
                 <div class="card crdbody" onclick="location.href='Identificar.php'">
                     <div class="card-body">
                         <i class="fas fa-leaf card-icon identificacion"></i>
@@ -143,7 +149,7 @@ $stmt2->close();
             </div>
 
             <!-- Revisión de Estado de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
                 <div class="card" onclick="location.href='estado.php'">
                     <div class="card-body">
                         <i class="fas fa-search card-icon revision"></i>
@@ -164,18 +170,18 @@ $stmt2->close();
                 </div>
             </div>
 
-            <!--Formatos de Inscripccion -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <!-- Formatos de Inscripción -->
+            <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
                 <div class="card" onclick="descargarReportes()">
                     <div class="card-body">
                         <i class="fas fa-file card-icon premios"></i>
                         <h5 class="card-title">Formato Inscripcion</h5>
-                        <p class="card-text">Descargar los formatos de inscripcion para registrarse de forma manuscrita.</p>
+                        <p class="card-text">Descargar los formatos de inscripción para registrarse de forma manuscrita.</p>
                     </div>
                 </div>
             </div>
         </div> <!-- Cierre del div.row -->
-    </div> <!-- Cierre del div.main-content -->
+    </div>
     <script>
         function descargarReportes() {
             const reportes = [
@@ -192,6 +198,37 @@ $stmt2->close();
                 document.body.removeChild(link);
             });
         }
+    </script>
+    <script>
+        // Ejecutar cuando el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function () {
+            // Capturar el tipo de usuario desde PHP
+            const userType = <?php echo json_encode($user_type); ?>;
+
+            // Enviar el tipo de usuario a la consola del navegador
+            console.log("Tipo de Usuario Conectado:", userType);
+
+            // Ocultar todas las secciones al inicio
+            document.querySelectorAll('.col-lg-4').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            if (userType === 1) {
+                // Mostrar todas las secciones para el usuario tipo 1
+                document.querySelectorAll('.col-lg-4').forEach(section => {
+                    section.style.display = 'block';
+                });
+                console.log("Usuario tipo 1: Acceso completo al dashboard.");
+            } else if (userType === 5) {
+                // Mostrar solo las secciones específicas para tipo 5
+                document.querySelectorAll('.section-5').forEach(section => {
+                    section.style.display = 'block';
+                });
+                console.log("Usuario tipo 5: Acceso limitado.");
+            } else {
+                console.log("Usuario sin acceso a secciones específicas.");
+            }
+        });
     </script>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->

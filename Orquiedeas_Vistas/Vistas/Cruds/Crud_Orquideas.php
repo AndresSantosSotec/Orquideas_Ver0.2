@@ -1,49 +1,92 @@
 <?php
 include '../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión
+session_start();
 
-// Consultar las orquídeas con INNER JOIN a grupo, clase y participante
-$query = "
-    SELECT 
-        o.id_orquidea, 
-        o.codigo_orquidea,
-        p.nombre AS nombre_participante,
-        g.Cod_Grupo,
-        g.nombre_grupo,
-        c.id_clase,
-        CONCAT('Clase: ', c.id_clase) AS clase
-    FROM tb_orquidea o
-    INNER JOIN grupo g ON o.id_grupo = g.id_grupo
-    INNER JOIN clase c ON o.id_clase = c.id_clase
-    INNER JOIN tb_participante p ON o.id_participante = p.id";
+// Capturar el ID y tipo del usuario desde la sesión
+$user_id = $_SESSION['user_id'];
+$user_type = $_SESSION['user_type'];
 
-$orquideas = mysqli_query($conexion, $query);
+// Crear la consulta dependiendo del tipo de usuario
+if ($user_type == 5) {
+    // Si es usuario tipo 5, mostrar solo las orquídeas registradas por él
+    $query = "
+        SELECT 
+            o.id_orquidea, 
+            o.codigo_orquidea,
+            p.nombre AS nombre_participante,
+            g.Cod_Grupo,
+            g.nombre_grupo,
+            c.id_clase,
+            CONCAT('Clase: ', c.id_clase) AS clase
+        FROM tb_orquidea o
+        INNER JOIN grupo g ON o.id_grupo = g.id_grupo
+        INNER JOIN clase c ON o.id_clase = c.id_clase
+        INNER JOIN tb_participante p ON o.id_participante = p.id
+        WHERE p.id_usuario = ?"; // Filtrar por ID del usuario
 
-$year = date('Y');
-// Consulta para contar orquídeas registradas en el año actual
-$sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
-                  FROM tb_orquidea 
-                  WHERE YEAR(fecha_creacion) = ?";
-$stmt2 = $conexion->prepare($sql_orquideas);
-$stmt2->bind_param("i", $year);
+    $stmt = $conexion->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $orquideas = $stmt->get_result();
+} else {
+    // Si es administrador, mostrar todas las orquídeas
+    $query = "
+        SELECT 
+            o.id_orquidea, 
+            o.codigo_orquidea,
+            p.nombre AS nombre_participante,
+            g.Cod_Grupo,
+            g.nombre_grupo,
+            c.id_clase,
+            CONCAT('Clase: ', c.id_clase) AS clase
+        FROM tb_orquidea o
+        INNER JOIN grupo g ON o.id_grupo = g.id_grupo
+        INNER JOIN clase c ON o.id_clase = c.id_clase
+        INNER JOIN tb_participante p ON o.id_participante = p.id";
+
+    $orquideas = mysqli_query($conexion, $query);
+}
+$year = date('Y'); // Año actual
+
+// Lógica para el conteo de orquídeas y la consulta según el tipo de usuario
+if ($user_type == 5) {
+    // Usuario tipo 5: contar solo sus orquídeas
+    $sql_orquideas = "
+        SELECT COUNT(*) AS total_orquideas 
+        FROM tb_orquidea 
+        INNER JOIN tb_participante p ON tb_orquidea.id_participante = p.id
+        WHERE YEAR(tb_orquidea.fecha_creacion) = ? AND p.id_usuario = ?";
+    
+    $stmt2 = $conexion->prepare($sql_orquideas);
+    $stmt2->bind_param("ii", $year, $user_id);
+} else {
+    // Administrador: contar todas las orquídeas
+    $sql_orquideas = "
+        SELECT COUNT(*) AS total_orquideas 
+        FROM tb_orquidea 
+        WHERE YEAR(fecha_creacion) = ?";
+    
+    $stmt2 = $conexion->prepare($sql_orquideas);
+    $stmt2->bind_param("i", $year);
+}
+
 $stmt2->execute();
 $result2 = $stmt2->get_result();
 $total_orquideas = $result2->fetch_assoc()['total_orquideas'];
-
 $stmt2->close();
 ?>
 
 <div class="col-md-4" style="position: relative; left: 35%; width: 50%;">
-<div class="card text-white bg-success mb-3">
-    <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
-    <div class="card-body">
-        <h5 class="card-title"><?php echo $total_orquideas; ?> Orquídeas</h5>
+    <div class="card text-white bg-success mb-3">
+        <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
+        <div class="card-body">
+            <h5 class="card-title"><?php echo $total_orquideas; ?> Orquídeas</h5>
+        </div>
     </div>
-</div>
 </div>
 
 <div class="container mt-5" style="max-width: 60%; margin: 0 auto;">
-    <!-- Resultados -->
-    <div class="card" style="font-size: 0.9rem;">
+    <div class="card">
         <div class="card-header bg-primary text-white">
             <h2 style="font-size: 1.5rem;">Resultados</h2>
         </div>
@@ -71,18 +114,19 @@ $stmt2->close();
                                 <td><?php echo $row['clase']; ?></td>
                                 <td><?php echo $row['nombre_grupo']; ?></td>
                                 <td>
-                                    <!-- Botón Ver para mostrar detalles en un card -->
+                                    <!-- Botón Ver -->
                                     <a href="javascript:void(0)" class="btn btn-info btn-sm btn-ver" data-id="<?php echo $row['id_orquidea']; ?>" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <!-- Botón de Editar -->
-                                    <button type="button" class="btn btn-warning btn-sm btn-editar" data-id="<?php echo $row['id_orquidea']; ?>" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <!-- Botón de Eliminar -->
-                                    <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-id="<?php echo $row['id_orquidea']; ?>" title="Eliminar">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                    <?php if ($user_type != 5) { ?>
+                                        <!-- Mostrar solo para usuarios que no sean tipo 5 -->
+                                        <button type="button" class="btn btn-warning btn-sm btn-editar" data-id="<?php echo $row['id_orquidea']; ?>" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm btn-eliminar" data-id="<?php echo $row['id_orquidea']; ?>" title="Eliminar">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php }
@@ -92,10 +136,12 @@ $stmt2->close();
                         </tr>
                     <?php } ?>
                 </tbody>
+
             </table>
         </div>
     </div>
 </div>
+
 
 <!-- Contenedor donde se mostrará la vista de "Ver Orquídea" -->
 <div id="contenido-principal" class="container mt-3" style="max-width: 60%; margin: 0 auto;">
@@ -121,19 +167,19 @@ $stmt2->close();
             if (result.isConfirmed) {
                 // Si el usuario confirma, realizar la eliminación con AJAX
                 $.ajax({
-                        url: '../../Orquiedeas_Vistas/Backend/eliminar_orquidea.php',  // Ruta relativa
-                        type: 'POST',
-                        data: {
-                            id: idOrquidea
-                        },
-                        success: function(response) {
-                            Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-                            $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
-                        },
-                        error: function(err) {
-                            Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
-                        }
-                    });
+                    url: '../../Orquiedeas_Vistas/Backend/eliminar_orquidea.php', // Ruta relativa
+                    type: 'POST',
+                    data: {
+                        id: idOrquidea
+                    },
+                    success: function(response) {
+                        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+                        $('#orquidea_' + idOrquidea).remove(); // Eliminar la fila de la tabla
+                    },
+                    error: function(err) {
+                        Swal.fire('Error!', 'No se pudo eliminar el registro.', 'error');
+                    }
+                });
             }
         });
     });
@@ -146,7 +192,9 @@ $stmt2->close();
         $.ajax({
             url: '../Vistas/Cards/Edit_orquidea.php', // Ruta de la vista de edición
             type: 'GET',
-            data: { id_orquidea: idOrquidea }, // Pasar el ID de la orquídea
+            data: {
+                id_orquidea: idOrquidea
+            }, // Pasar el ID de la orquídea
             success: function(response) {
                 // Cargar el contenido en el div principal
                 $('#contenido-principal').html(response);
@@ -165,7 +213,9 @@ $stmt2->close();
         $.ajax({
             url: '../Vistas/Cards/ver_orquidea.php', // Ruta del archivo PHP para obtener los datos
             type: 'GET',
-            data: { id_orquidea: idOrquidea }, // Enviar el ID de la orquídea
+            data: {
+                id_orquidea: idOrquidea
+            }, // Enviar el ID de la orquídea
             success: function(response) {
                 // Insertar la respuesta en el div "contenido-principal"
                 $('#contenido-principal').html(response);
@@ -174,5 +224,18 @@ $stmt2->close();
                 console.error('Error al obtener los datos de la orquídea:', err);
             }
         });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userType = <?php echo json_encode($_SESSION['user_type']); ?>;
+        console.log("Tipo de Usuario:", userType);
+
+        if (userType === 5) {
+            console.log("Usuario tipo 5: Mostrando solo sus orquídeas registradas.");
+        } else {
+            console.log("Administrador: Mostrando todas las orquídeas.");
+        }
     });
 </script>
