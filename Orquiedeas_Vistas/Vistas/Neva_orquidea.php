@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../Backend/Conexion_bd.php';
 
 $tipo_usuario = $_SESSION['tipo_usuario'];
@@ -7,6 +6,8 @@ $tipo_usuario = $_SESSION['tipo_usuario'];
 $participantes = mysqli_query($conexion, "SELECT `id`, `nombre` FROM `tb_participante`");
 // Consultar los grupos de orquídeas
 $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo`");
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,14 +16,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Orquídea</title>
-
-
-
-
     <!-- Enlaces a Bootstrap JS (necesario para el funcionamiento de los modales) -->
-
-
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -33,6 +27,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
 
 <body>
     <!-- Sidebar -->
+    <?php include '../Vistas/modales/side_orquideas.php' ?>
     <div class="sidebar" id="sidebar">
         <button class="toggle-button" id="toggle-button">☰</button>
         <h2>Admin Panel</h2>
@@ -50,7 +45,6 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
     <div id="contenido-principal">
         <?php include '../Vistas/Cards/orquideas.php'; ?>
     </div>
-
 
     <!-- Script para abrir la cámara -->
     <script>
@@ -94,7 +88,6 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
                     fileInput.files = dataTransfer.files;
                 });
             });
-
             // Apagar la cámara
             apagarCamara.addEventListener('click', function() {
                 const stream = video.srcObject;
@@ -204,7 +197,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
             });
         }
 
-        
+
 
         $(document).ready(function() {
             // Interceptar el clic en los enlaces del menú
@@ -228,14 +221,9 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
         });
     </script>
 
-
-
     <script src="../../Recursos/js/side.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
 </body>
 
 </html>

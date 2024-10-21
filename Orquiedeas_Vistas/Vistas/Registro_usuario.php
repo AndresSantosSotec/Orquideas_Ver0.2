@@ -28,6 +28,8 @@ if ($tipo_usuario == 5) {
 // Consultar los departamentos desde la base de datos
 $consu = mysqli_query($conexion, "SELECT `id_departamento`, `nombre_departamento` FROM `tb_departamento`");
 $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">

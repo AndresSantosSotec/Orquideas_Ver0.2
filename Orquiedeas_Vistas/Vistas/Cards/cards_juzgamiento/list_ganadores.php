@@ -7,7 +7,7 @@ if (isset($_GET['mensaje'])) {
     }
 }
 
-include '../../../Backend/Conexion_bd.php'; // Ajusta la ruta de conexión
+
 
 // Validar la conexión
 if (!$conexion) {

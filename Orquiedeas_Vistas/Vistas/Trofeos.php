@@ -1,4 +1,6 @@
 <?php
+
+include '../Backend/Conexion_bd.php';
 session_start();
 
 // Verificar si la sesión está activa
@@ -76,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Contenido principal donde se aplicarán las tarjetas pequeñas -->
     <div id="contenido-principal">
         <!-- Ejemplo de tarjeta con botón para descargar el PDF -->
-        
+        <?php include '../Vistas/Cards/Card_Trofeo/Crud_trofeos.php';?>
     </div>
 
     <!-- Enlaces a Bootstrap JS, jQuery y tus scripts personalizados -->
@@ -107,6 +109,79 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script>
+    // Manejo de la eliminación
+    $(document).on('click', '.btn-eliminar', function() {
+        var idTrofeo = $(this).data('id'); // Obtener el ID del trofeo
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, realizar la eliminación con AJAX
+                $.ajax({
+                        url: '../../Orquiedeas_Vistas/Backend/eliminar_trofeo.php',  // Ruta relativa
+                        type: 'POST',
+                        data: {
+                            id: idTrofeo
+                        },
+                        success: function(response) {
+                            Swal.fire('Eliminado!', 'El trofeo ha sido eliminado.', 'success');
+                            $('#trofeo_' + idTrofeo).remove(); // Eliminar la fila de la tabla
+                        },
+                        error: function(err) {
+                            Swal.fire('Error!', 'No se pudo eliminar el trofeo.', 'error');
+                        }
+                    });
+            }
+        });
+    });
+
+    // Manejo de la edición
+    $(document).on('click', '.btn-editar', function() {
+        var idTrofeo = $(this).data('id'); // Obtener el ID del trofeo
+
+        // Cargar la vista de edición en el div "contenido-principal"
+        $.ajax({
+            url: '../Vistas/Cards/Edit_trofeo.php', // Ruta de la vista de edición
+            type: 'GET',
+            data: { id_trofeo: idTrofeo }, // Pasar el ID del trofeo
+            success: function(response) {
+                // Cargar el contenido en el div principal
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al cargar la página de edición:', err);
+            }
+        });
+    });
+
+    // Manejo de ver trofeo en un card
+    $(document).on('click', '.btn-ver', function() {
+        var idTrofeo = $(this).data('id'); // Obtener el ID del trofeo
+
+        // Realizar la solicitud AJAX para obtener los datos
+        $.ajax({
+            url: '../Vistas/Cards/ver_trofeo.php', // Ruta del archivo PHP para obtener los datos
+            type: 'GET',
+            data: { id_trofeo: idTrofeo }, // Enviar el ID del trofeo
+            success: function(response) {
+                // Insertar la respuesta en el div "contenido-principal"
+                $('#contenido-principal').html(response);
+            },
+            error: function(err) {
+                console.error('Error al obtener los datos del trofeo:', err);
+            }
+        });
+    });
 </script>
 
 
