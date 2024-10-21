@@ -5,41 +5,54 @@ session_start();
 
 // Verificar si la sesión está activa
 if (!isset($_SESSION['user_id'])) {
-    // Redirigir al login si no hay sesión
-    header("Location: login.php");
+    header("Location: login.php"); // Redirigir al login si no hay sesión
     exit;
 }
 
 // Año actual
 $year = date('Y');
+$user_id = $_SESSION['user_id'];
+$user_type = $_SESSION['user_type']; // Capturar tipo de usuario
 
-// Consulta para contar participantes registrados en el año actual
-$sql_participantes = "SELECT COUNT(*) AS total_participantes 
-                      FROM tb_participante 
-                      WHERE YEAR(fecha_creacion) = ?";
-$stmt1 = $conexion->prepare($sql_participantes);
-$stmt1->bind_param("i", $year);
+// Consultar participantes según el tipo de usuario
+if ($user_type == 5) {
+    $sql_participantes = "SELECT COUNT(*) AS total_participantes 
+                          FROM tb_participante 
+                          WHERE YEAR(fecha_creacion) = ? AND id_usuario = ?";
+    $stmt1 = $conexion->prepare($sql_participantes);
+    $stmt1->bind_param("ii", $year, $user_id);
+} else {
+    $sql_participantes = "SELECT COUNT(*) AS total_participantes 
+                          FROM tb_participante 
+                          WHERE YEAR(fecha_creacion) = ?";
+    $stmt1 = $conexion->prepare($sql_participantes);
+    $stmt1->bind_param("i", $year);
+}
 $stmt1->execute();
 $result1 = $stmt1->get_result();
 $total_participantes = $result1->fetch_assoc()['total_participantes'];
+$stmt1->close();
 
-// Consulta para contar orquídeas registradas en el año actual
-$sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
-                  FROM tb_orquidea 
-                  WHERE YEAR(fecha_creacion) = ?";
-$stmt2 = $conexion->prepare($sql_orquideas);
-$stmt2->bind_param("i", $year);
+// Consultar orquídeas según el tipo de usuario
+if ($user_type == 5) {
+    $sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
+                      FROM tb_orquidea 
+                      WHERE YEAR(fecha_creacion) = ? AND id_participante IN 
+                          (SELECT id FROM tb_participante WHERE id_usuario = ?)";
+    $stmt2 = $conexion->prepare($sql_orquideas);
+    $stmt2->bind_param("ii", $year, $user_id);
+} else {
+    $sql_orquideas = "SELECT COUNT(*) AS total_orquideas 
+                      FROM tb_orquidea 
+                      WHERE YEAR(fecha_creacion) = ?";
+    $stmt2 = $conexion->prepare($sql_orquideas);
+    $stmt2->bind_param("i", $year);
+}
 $stmt2->execute();
 $result2 = $stmt2->get_result();
 $total_orquideas = $result2->fetch_assoc()['total_orquideas'];
-
-$stmt1->close();
 $stmt2->close();
-
-// Capturar el tipo de usuario de la sesión
-$user_type = $_SESSION['user_type'];
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -60,11 +73,12 @@ $user_type = $_SESSION['user_type'];
 </head>
 
 <body>
-        <!-- Logo de la universidad en la esquina superior derecha -->
-        <div style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
-         <!-- Segundo logo -->
+    <!-- Logo de la universidad en la esquina superior derecha -->
+    <div style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+        <!-- Segundo logo -->
         <img src="/Orquideas_Ver0.2/Recursos/img/Logo-fotor-bg-remover-2024090519443.png" alt="Logo 2" style="width: 100px; height: auto; margin-right: 10px;">
-        <img src="/Orquideas_Ver0.2/Recursos/img/LogoUMG.png" alt="Logo Universidad" style="width: 200px; height: auto;">    </div>
+        <img src="/Orquideas_Ver0.2/Recursos/img/LogoUMG.png" alt="Logo Universidad" style="width: 200px; height: auto;">
+    </div>
     <!-- Sidebar -->
     <?php include '../Vistas/modales/side.php'; ?>
     <!---->
@@ -73,6 +87,7 @@ $user_type = $_SESSION['user_type'];
         <b>Haz click en el icono que quieres acceder</b>
         <!-- Sub-sección: Datos del año actual -->
         <div class="row mt-4">
+            <!-- Card de Participantes -->
             <div class="col-lg-6 section-5">
                 <div class="card text-white bg-info mb-3">
                     <div class="card-header">Participantes Registrados (<?php echo $year; ?>)</div>
@@ -82,6 +97,7 @@ $user_type = $_SESSION['user_type'];
                 </div>
             </div>
 
+            <!-- Card de Orquídeas -->
             <div class="col-lg-6">
                 <div class="card text-white bg-success mb-3">
                     <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
@@ -91,7 +107,6 @@ $user_type = $_SESSION['user_type'];
                 </div>
             </div>
         </div>
-
         <div class="row">
             <!-- Perfiles de Usuario -->
             <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
@@ -201,7 +216,7 @@ $user_type = $_SESSION['user_type'];
     </script>
     <script>
         // Ejecutar cuando el DOM esté completamente cargado
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Capturar el tipo de usuario desde PHP
             const userType = <?php echo json_encode($user_type); ?>;
 

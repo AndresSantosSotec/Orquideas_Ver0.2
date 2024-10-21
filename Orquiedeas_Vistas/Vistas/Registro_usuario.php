@@ -105,7 +105,8 @@ $consu1 = mysqli_query($conexion, "SELECT `id_aso`, `clase` FROM `tb_aso`");
                             Swal.fire({
                                 icon: 'info',
                                 title: 'Registro limitado',
-                                text: 'Solo puedes registrar un participante.',
+                                text: 'Solo puedes registrar un participante,.',
+                                
                                 confirmButtonText: 'Aceptar'
                             });
                         }
