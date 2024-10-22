@@ -1,6 +1,6 @@
 <?php
 // index.php
-header('Location: dashboard.php');
+header('Location: ./Orquiedeas_Vistas/Vistas/Dashboard.php');
 exit;
 
 ?>
