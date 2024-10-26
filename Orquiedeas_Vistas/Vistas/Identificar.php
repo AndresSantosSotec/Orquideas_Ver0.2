@@ -23,14 +23,7 @@
     <div class="sidebar">
         <h2>Admin Panel</h2>
         <ul>
-            <li><a href="index.php"><i class="fas fa-home"></i> <span>Volver al Inicio</span></a></li>
-            <li><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-            <li><a href="#"><i class="fas fa-plus-circle"></i> <span>Registro de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-user"></i> <span>Perfiles de Usuario</span></a></li>
-            <li><a href="#"><i class="fas fa-leaf"></i> <span>Identificación de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-gavel"></i> <span>Juzgamiento</span></a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Reporte de Orquídeas</span></a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a></li>
+            <li><a href="Dashboard.php"><i class="fas fa-home"></i> <span>Volver al Inicio</span></a></li>
         </ul>
     </div>
 

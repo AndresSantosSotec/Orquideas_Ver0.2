@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_type'] = $user_type; // Captura del id_tipo_usu
 
                 // Redirigir al dashboard
-                header('Location: dashboard.php');
+                header('Location: Dashboard.php');
                 exit();
             } else {
                 $message = 'Contraseña incorrecta.';
