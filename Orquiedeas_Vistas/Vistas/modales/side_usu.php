@@ -3,7 +3,7 @@
     <h2>Admin Panel</h2>
 
     <ul>
-        <li><a href="dashboard.php" data-target="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <li><a href="Dashboard.php" data-target="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
         <li class="admin-only">
             <a href="#" data-target="../Vistas/Cruds/Crud_participantes.php">
                 <i class="fas fa-users"></i> <span>Ver Participantes</span>
