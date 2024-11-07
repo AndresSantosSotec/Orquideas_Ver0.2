@@ -1,0 +1,1 @@
+-todo aquel que lea este codigo que aba done toda esperanza
