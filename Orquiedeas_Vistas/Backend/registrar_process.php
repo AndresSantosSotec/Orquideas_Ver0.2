@@ -34,15 +34,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $password_encrypted = password_hash($contrasena, PASSWORD_DEFAULT);
             $fecha_registro = date('Y-m-d H:i:s'); // Fecha actual
 
-            // Insertar los datos
-            $sql = "INSERT INTO tb_usuarios (nombre_usuario, correo, contrasena, id_departamento, id_municipio, id_tipo_usu, id_aso, fecha_registro) 
-                    VALUES ('$nombre_usuario', '$correo', '$password_encrypted', '$id_departamento', '$id_municipio', '$id_tipo_usu', '$id_aso', '$fecha_registro')";
+            // Insertar los datos utilizando prepared statements
+            $sql = "INSERT INTO tb_usuarios (nombre_usuario, correo, contrasena, id_departamento, id_municipio, id_tipo_usu, id_aso, fecha_registro)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conexion->prepare($sql);
+            if ($stmt) {
+                $stmt->bind_param(
+                    'sssiiiss',
+                    $nombre_usuario,
+                    $correo,
+                    $password_encrypted,
+                    $id_departamento,
+                    $id_municipio,
+                    $id_tipo_usu,
+                    $id_aso,
+                    $fecha_registro
+                );
 
-            if (mysqli_query($conexion, $sql)) {
-                $message = "Registro exitoso";
-                $messageType = "success";
+                if ($stmt->execute()) {
+                    $message = "Registro exitoso";
+                    $messageType = "success";
+                } else {
+                    $message = "Error al registrar: " . $stmt->error;
+                    $messageType = "error";
+                }
+                $stmt->close();
             } else {
-                $message = "Error al registrar: " . mysqli_error($conexion);
+                $message = "Error al preparar la consulta: " . $conexion->error;
                 $messageType = "error";
             }
         }

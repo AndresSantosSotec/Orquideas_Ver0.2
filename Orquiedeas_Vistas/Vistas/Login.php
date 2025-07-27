@@ -172,16 +172,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 </html>
-
-<script>
-    function togglePassword() {
-        const passwordField = document.getElementById('password');
-        const toggleIcon = document.getElementById('toggleIcon');
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-        toggleIcon.classList.toggle('fa-eye');
-        toggleIcon.classList.toggle('fa-eye-slash');
-    }
-</script>
-</body>
-</html>

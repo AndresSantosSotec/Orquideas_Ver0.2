@@ -1,23 +1,14 @@
 <?php
-//
-// Configuración de bd en localHost
-$db_host = 'localhost';
-$db_username = 'root';
-$db_password = ''; // Cambia por una contraseña segura
-$db_name = 'bd_orquideas';
+// Conexión utilizando variables de entorno para mayor seguridad
+$db_host = getenv('DB_HOST') ?: 'localhost';
+$db_username = getenv('DB_USER') ?: 'root';
+$db_password = getenv('DB_PASS') ?: '';
+$db_name = getenv('DB_NAME') ?: 'bd_orquideas';
 
-// Conexión a la base de datos
 $conexion = new mysqli($db_host, $db_username, $db_password, $db_name);
-$conexion->set_charset("utf8");
+$conexion->set_charset('utf8');
 
-// Manejo de errores
 if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+    die('Error de conexión: ' . $conexion->connect_error);
 }
-
-// Configuración de bd en cloud
-
-
-
-
-//configuracion en el entorno de Pruebas 
+?>
