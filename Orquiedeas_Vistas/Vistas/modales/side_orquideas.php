@@ -3,7 +3,7 @@
     <h2>Admin Panel</h2>
     <ul>
     <li><a href="Dashboard.php" class="no-ajax"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-        <li><a href="Neva_orquidea.php" data-target="Neva_orquidea.php"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
+        <li><a href="Nueva_orquidea.php" data-target="Nueva_orquidea.php"><i class="fas fa-seedling"></i> <span>Registro de Orquídeas</span></a></li>
         <li><a href="#" data-target="../Vistas/Cruds/Crud_Orquideas.php"><i class="fas fa-users"></i> <span>Ver Orquídeas</span></a></li>
     </ul>
 </div>

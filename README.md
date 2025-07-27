@@ -20,3 +20,16 @@ Este repositorio contiene la base del sistema para gestionar las exposiciones de
 - Carga de fotos ganadoras antes del 30 de abril/mayo.
 - Entrega de premios: 12 de mayo.
 
+## Configuración de la base de datos
+
+La conexión a MySQL se realiza leyendo variables de entorno para mayor seguridad:
+
+```
+DB_HOST  # servidor de la base de datos, por defecto localhost
+DB_USER  # usuario de la base de datos, por defecto root
+DB_PASS  # contraseña del usuario
+DB_NAME  # nombre de la base de datos, por defecto bd_orquideas
+```
+
+Define estas variables antes de ejecutar el proyecto para evitar incluir credenciales en el código fuente.
+

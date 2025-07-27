@@ -127,7 +127,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
             var formData = new FormData(this);
 
             $.ajax({
-                url: '../Backend/agregar_orquidea.php', // Cambia esta URL si es necesario
+                url: '../Backend/OrquideaController.php?action=add',
                 type: 'POST',
                 data: formData,
                 processData: false, // No procesar los datos
@@ -141,7 +141,7 @@ $grupos = mysqli_query($conexion, "SELECT `id_grupo`, `nombre_grupo` FROM `grupo
                             text: response.message,
                             confirmButtonText: 'Aceptar'
                         }).then(() => {
-                            window.location.href = 'Neva_orquidea.php'; // Redirigir
+                            window.location.href = 'Nueva_orquidea.php'; // Redirigir
                         });
                     } else {
                         Swal.fire({

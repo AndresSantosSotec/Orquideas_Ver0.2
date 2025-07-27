@@ -144,7 +144,7 @@ $stmt2->close();
 
             <!-- Registro de Orquídeas -->
             <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
-                <div class="card crdbody" onclick="location.href='Neva_orquidea.php'">
+                <div class="card crdbody" onclick="location.href='Nueva_orquidea.php'">
                     <div class="card-body">
                         <i class="fas fa-plus-circle card-icon orquidea"></i>
                         <h5 class="card-title">Gestionar Orquídeas</h5>

@@ -105,7 +105,7 @@ $stmt2->close();
             <h2 style="font-size: 1.5rem;">Resultados</h2>
         </div>
         <div class="card-body" style="padding: 10px;">
-            <a href="Neva_orquidea.php" class="btn btn-dark mb-3">+ Agregar Nuevo Registro</a>
+            <a href="Nueva_orquidea.php" class="btn btn-dark mb-3">+ Agregar Nuevo Registro</a>
             <table class="table table-bordered table-striped table-sm">
                 <thead class="thead-dark">
                     <tr>
@@ -181,7 +181,7 @@ $stmt2->close();
             if (result.isConfirmed) {
                 // Si el usuario confirma, realizar la eliminación con AJAX
                 $.ajax({
-                    url: '../../Orquiedeas_Vistas/Backend/eliminar_orquidea.php', // Ruta relativa
+                    url: '../../Orquiedeas_Vistas/Backend/OrquideaController.php?action=delete',
                     type: 'POST',
                     data: {
                         id: idOrquidea

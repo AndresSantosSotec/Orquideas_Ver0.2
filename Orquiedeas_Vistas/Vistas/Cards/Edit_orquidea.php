@@ -133,7 +133,7 @@ $(document).on('submit', '#form-editar-orquidea', function(e) {
     var formData = new FormData(this); // Crear un FormData con los datos del formulario
 
     $.ajax({
-        url: '../Backend/editar_orquidea.php', // Ruta al archivo PHP que procesa la edición
+        url: '../Backend/OrquideaController.php?action=edit',
         type: 'POST',
         data: formData,
         processData: false,
