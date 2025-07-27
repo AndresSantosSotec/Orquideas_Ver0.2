@@ -14,6 +14,18 @@ $year = date('Y');
 $user_id = $_SESSION['user_id'];
 $user_type = $_SESSION['user_type']; // Capturar tipo de usuario
 
+// Consultar nombre del usuario si es tipo 5
+$nombre_usuario = "";
+if ($user_type == 5) {
+    $sql_usuario = "SELECT nombre FROM usuarios WHERE id_usuario = ?";
+    $stmt = $conexion->prepare($sql_usuario);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $nombre_usuario = $result->fetch_assoc()['nombre'];
+    $stmt->close();
+}
+
 // Consultar participantes según el tipo de usuario
 if ($user_type == 5) {
     $sql_participantes = "SELECT COUNT(*) AS total_participantes 
@@ -52,6 +64,7 @@ $stmt2->execute();
 $result2 = $stmt2->get_result();
 $total_orquideas = $result2->fetch_assoc()['total_orquideas'];
 $stmt2->close();
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -90,12 +103,22 @@ $stmt2->close();
             <!-- Card de Participantes -->
             <div class="col-lg-6 section-5">
                 <div class="card text-white bg-info mb-3">
-                    <div class="card-header">Participantes Registrados (<?php echo $year; ?>)</div>
+                    <div class="card-header">
+                        Participantes Registrados (<?php echo $year; ?>)
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title"><?php echo $total_participantes; ?> Participantes</h5>
+                        <h5 class="card-title">
+                            <?php echo $total_participantes; ?> Participantes
+                        </h5>
+                        <?php if ($user_type == 5): ?>
+                            <p class="card-text">
+                                Bienvenido, <?php echo htmlspecialchars($nombre_usuario); ?>.
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
+
 
             <!-- Card de Orquídeas -->
             <div class="col-lg-6">
