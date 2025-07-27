@@ -7,15 +7,12 @@ if (isset($_GET['mensaje'])) {
     }
 }
 
-
-
 // Validar la conexión
 if (!$conexion) {
     die("Error al conectar con la base de datos: " . mysqli_connect_error());
 }
 
 // Consultar los ganadores
-
 $query = "
     SELECT 
         g.id_ganador, 
@@ -30,24 +27,27 @@ $query = "
     INNER JOIN grupo gr ON g.id_grupo = gr.id_grupo
     INNER JOIN clase c ON g.id_clase = c.id_clase";
 
-
 $ganadores = mysqli_query($conexion, $query);
 
-// Verificar si la consulta tiene errores
 if (!$ganadores) {
     die("Error en la consulta: " . mysqli_error($conexion));
 }
 ?>
 
 <div class="container mt-3" style="max-width: 60%; margin: 0 auto;">
+    <!-- Filtro de búsqueda -->
+    <div class="form-group mb-3">
+        <label for="search_ganador">Buscar Ganador:</label>
+        <input type="text" id="search_ganador" class="form-control" placeholder="Buscar por nombre de orquídea, grupo o clase.">
+    </div>
+
     <!-- Resultados -->
     <div class="card" style="font-size: 0.9rem;">
         <div class="card-header bg-primary text-white">
             <h2 style="font-size: 1.5rem;">Ganadores Registrados</h2>
         </div>
         <div class="card-body" style="padding: 10px;">
-            <a href="Add_ganador.php" class="btn btn-dark mb-3">+ Agregar Nuevo Ganador</a>
-            <table class="table table-bordered table-striped table-sm">
+            <table class="table table-bordered table-striped table-sm" id="ganadores_table">
                 <thead class="thead-dark">
                     <tr>
                         <th>ID Ganador</th>
@@ -61,8 +61,7 @@ if (!$ganadores) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    if ($ganadores && mysqli_num_rows($ganadores) > 0) {
+                    <?php if (mysqli_num_rows($ganadores) > 0) {
                         while ($row = mysqli_fetch_assoc($ganadores)) { ?>
                             <tr id="ganador_<?php echo $row['id_ganador']; ?>">
                                 <td><?php echo $row['id_ganador']; ?></td>
@@ -73,7 +72,6 @@ if (!$ganadores) {
                                 <td><?php echo $row['empate']; ?></td>
                                 <td><?php echo $row['fecha_ganador']; ?></td>
                                 <td>
-                                    <!-- Botón de Editar -->
                                     <button type="button" class="btn btn-warning btn-sm btn-editar" data-id="<?php echo $row['id_ganador']; ?>" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -96,9 +94,20 @@ if (!$ganadores) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // Filtrar ganadores en tiempo real
+    document.getElementById('search_ganador').addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#ganadores_table tbody tr');
+
+        rows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            row.style.display = rowText.includes(searchValue) ? '' : 'none';
+        });
+    });
+
     // Manejo de la eliminación de ganadores
     $(document).on('click', '.btn-eliminar', function() {
-        var idGanador = $(this).data('id'); // Obtener el ID del ganador
+        var idGanador = $(this).data('id');
 
         Swal.fire({
             title: '¿Estás seguro?',
@@ -111,20 +120,15 @@ if (!$ganadores) {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Si el usuario confirma, realizar la eliminación con AJAX
                 $.ajax({
                     url: '../Backend/eliminar_ganador.php',
                     type: 'POST',
                     data: { id: idGanador },
                     success: function(response) {
-                        var jsonResponse = JSON.parse(response); // Convertir la respuesta JSON
+                        var jsonResponse = JSON.parse(response);
                         if (jsonResponse.status === 'success') {
-                            Swal.fire(
-                                'Eliminado!',
-                                'El ganador ha sido eliminado.',
-                                'success'
-                            );
-                            $('#ganador_' + idGanador).remove(); // Eliminar la fila de la tabla
+                            Swal.fire('Eliminado!', 'El ganador ha sido eliminado.', 'success');
+                            $('#ganador_' + idGanador).remove();
                         } else {
                             Swal.fire('Error!', jsonResponse.message, 'error');
                         }
@@ -139,15 +143,13 @@ if (!$ganadores) {
 
     // Manejo de la edición
     $(document).on('click', '.btn-editar', function() {
-        var idGanador = $(this).data('id'); // Obtener el ID del ganador
+        var idGanador = $(this).data('id');
 
-        // Cargar la vista de edición en el div "contenido-principal"
         $.ajax({
-            url: '../Vistas/Cards/Edit_ganador.php', // Ruta de la vista de edición
+            url: '../Vistas/Cards/Edit_ganador.php',
             type: 'GET',
-            data: { id: idGanador }, // Pasar el ID del ganador
+            data: { id: idGanador },
             success: function(response) {
-                // Cargar el contenido en el div principal
                 $('#contenido-principal').html(response);
             },
             error: function(err) {

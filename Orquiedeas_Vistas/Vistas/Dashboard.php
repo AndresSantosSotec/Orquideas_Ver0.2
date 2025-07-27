@@ -72,7 +72,7 @@ $stmt2->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
+    <title>Incio</title>
 
     <!-- Enlaces a Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -96,7 +96,7 @@ $stmt2->close();
     <?php include '../Vistas/modales/side.php'; ?>
     <!---->
     <div class="main-content" id="main-content">
-        <h1>Bienvenido al Dashboard</h1>
+        <h1>Bienvenido </h1>
         <b>Haz click en el icono que quieres acceder</b>
         <!-- Sub-sección: Datos del año actual -->
         <div class="row mt-4">
@@ -169,7 +169,7 @@ $stmt2->close();
                 <div class="card" onclick="location.href='juzgamiento.php'">
                     <div class="card-body">
                         <i class="fas fa-gavel card-icon juzgamiento"></i>
-                        <h5 class="card-title">Juzgamiento</h5>
+                        <h5 class="card-title">Designar Ganadores </h5>
                         <p class="card-text">Sistema de juzgamiento de orquídeas.</p>
                     </div>
                 </div>
@@ -187,12 +187,12 @@ $stmt2->close();
             </div>
 
             <!-- Revisión de Estado de Orquídeas -->
-            <div class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
+            <div id="cardEstado" class="col-lg-4 col-md-6 mb-4 section-5" style="display: none;">
                 <div class="card" onclick="location.href='estado.php'">
                     <div class="card-body">
                         <i class="fas fa-search card-icon revision"></i>
-                        <h5 class="card-title">Estado de Orquídeas</h5>
-                        <p class="card-text">Revisa el estado actual de las orquídeas.</p>
+                        <h5 class="card-title" id="cardTitle">Estado de Orquídeas</h5>
+                        <p class="card-text" id="cardText">Revisa el estado actual de las orquídeas en competición.</p>
                     </div>
                 </div>
             </div>
@@ -202,7 +202,7 @@ $stmt2->close();
                 <div class="card" onclick="location.href='Trofeos.php'">
                     <div class="card-body">
                         <i class="fas fa-trophy card-icon premios"></i>
-                        <h5 class="card-title">Premios</h5>
+                        <h5 class="card-title">Asignar Trofeos</h5>
                         <p class="card-text">Gestiona y otorga los premios de las orquídeas.</p>
                     </div>
                 </div>
@@ -220,6 +220,24 @@ $stmt2->close();
             </div>
         </div> <!-- Cierre del div.row -->
     </div>
+    <script>
+        // Obtenemos el tipo de usuario desde una variable PHP
+        const userType = <?php echo json_encode($user_type); ?>;
+
+        // Seleccionamos los elementos de la tarjeta
+        const cardTitle = document.getElementById("cardTitle");
+        const cardText = document.getElementById("cardText");
+        const cardEstado = document.getElementById("cardEstado");
+
+        // Validación del tipo de usuario
+        if (userType == 5) {
+            // Cambiamos el texto de la tarjeta
+            cardText.textContent = "Revisa el estado de tus orquídeas (Un administrador printo le asignara estado).";
+        }
+
+        // Mostrar la tarjeta si corresponde
+        cardEstado.style.display = "block";
+    </script>
     <script>
         function descargarReportes() {
             const reportes = [

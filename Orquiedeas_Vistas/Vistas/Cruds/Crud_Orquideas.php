@@ -56,7 +56,7 @@ if ($user_type == 5) {
         FROM tb_orquidea 
         INNER JOIN tb_participante p ON tb_orquidea.id_participante = p.id
         WHERE YEAR(tb_orquidea.fecha_creacion) = ? AND p.id_usuario = ?";
-    
+
     $stmt2 = $conexion->prepare($sql_orquideas);
     $stmt2->bind_param("ii", $year, $user_id);
 } else {
@@ -65,7 +65,7 @@ if ($user_type == 5) {
         SELECT COUNT(*) AS total_orquideas 
         FROM tb_orquidea 
         WHERE YEAR(fecha_creacion) = ?";
-    
+
     $stmt2 = $conexion->prepare($sql_orquideas);
     $stmt2->bind_param("i", $year);
 }
@@ -76,6 +76,8 @@ $total_orquideas = $result2->fetch_assoc()['total_orquideas'];
 $stmt2->close();
 ?>
 
+
+
 <div class="col-md-4" style="position: relative; left: 35%; width: 50%;">
     <div class="card text-white bg-success mb-3">
         <div class="card-header">Orquídeas Registradas (<?php echo $year; ?>)</div>
@@ -84,6 +86,18 @@ $stmt2->close();
         </div>
     </div>
 </div>
+<div class="container mt-3" style="max-width: 60%; margin: 0 auto;">
+    <div class="input-group mb-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+        <select id="searchColumn" class="form-select" style="max-width: 150px;">
+            <option value="all">Todos</option>
+            <option value="1">Participante</option>
+            <option value="2">Código Grupo</option>
+            <option value="3">Clase</option>
+        </select>
+    </div>
+</div>
+
 
 <div class="container mt-5" style="max-width: 60%; margin: 0 auto;">
     <div class="card">
@@ -223,6 +237,32 @@ $stmt2->close();
             error: function(err) {
                 console.error('Error al obtener los datos de la orquídea:', err);
             }
+        });
+    });
+    //intento de manejo de la busqueda por tabla
+    document.getElementById('searchInput').addEventListener('input', function() {
+        let filter = this.value.toUpperCase();
+        let column = document.getElementById('searchColumn').value;
+        let rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(row => {
+            let cells = row.querySelectorAll('td');
+            let match = false;
+
+            if (column === "all") {
+                // Filtrar por toda la fila
+                match = Array.from(cells).some(cell =>
+                    (cell.textContent || cell.innerText).toUpperCase().indexOf(filter) > -1
+                );
+            } else {
+                // Filtrar por una columna específica
+                let cell = cells[column - 1]; // Ajustar índice
+                if (cell && (cell.textContent || cell.innerText).toUpperCase().indexOf(filter) > -1) {
+                    match = true;
+                }
+            }
+
+            row.style.display = match ? '' : 'none';
         });
     });
 </script>
